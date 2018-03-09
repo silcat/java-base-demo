@@ -22,7 +22,7 @@ public class StrategyPattern {
     }
     //抽出公共属性
     static class Animal{
-        //提出变化部分，封装变化，针对接口编程
+        //提出变化部分，封装算法实现，针对接口编程
         private SoundBehavior soundBehavior;
         private MoveBehavior moveBehavior;
         public void performSound(){
