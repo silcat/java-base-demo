@@ -34,6 +34,10 @@ public class QuickSortStrategy {
 
     /**
      *  二.双点快排序
+     *  start-> L -> P ->R -> end
+     *  L<= x < p：区间等于 基准点
+     *  p<= x < end:大于基准点
+     *  x<L: 小于基准点
      **/
     public static void twoSort(int[] a, int start, int end) {
         if (start>= end){
