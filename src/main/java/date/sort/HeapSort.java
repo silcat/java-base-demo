@@ -14,7 +14,7 @@ public class HeapSort {
         int arrayLength = arr.length;
         //循环建堆  
         for (int i = 0; i < arrayLength - 1; i++) {
-            //建堆  
+            //建堆
             buildMaxHeap(arr, arrayLength - 1 - i);
             //交换堆顶和最后一个元素  
             swap(arr, 0, arrayLength - 1 - i);
