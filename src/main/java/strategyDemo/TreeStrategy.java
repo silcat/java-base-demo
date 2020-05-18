@@ -18,7 +18,7 @@ public class TreeStrategy {
         if (start > end){
             return null;
         }else {
-            int m=(start+end)/2;
+            int m=start+ (end-start)/2;
             root=new Node(nums[m]);
             root.left=intSearchTree(nums,start,m-1,root.left);
             root.right=intSearchTree(nums,m+1,end,root.right);
@@ -37,6 +37,54 @@ public class TreeStrategy {
         preOrder(root.getLeft());
         preOrder(root.getRight());
 
+    }
+    public static void preOrderTwo(Node root){
+        Stack<Node> stack = new Stack();
+        if (root == null){
+            return;
+        }
+        stack.push(root);
+        while (!stack.empty()){
+            Node node = stack.pop();
+            res.add(node.getData());
+            if (node.getRight() != null){
+                stack.push(node.getRight());
+            }
+            if (node.getLeft() != null){
+                stack.push(node.getLeft());
+            }
+        }
+    }
+
+    class LRUCache extends LinkedHashMap<Integer, Integer> {
+        LinkedHashMap<Integer, Integer> hashMap;
+        int cap = 0;
+
+
+        public LRUCache(int capacity) {
+            hashMap =  new LinkedHashMap<Integer,Integer>(2);
+            cap = capacity;
+        }
+
+        public int get(int key) {
+            Integer value = hashMap.get(key);
+            if(value == null){
+                return -1;
+            }
+            return value;
+
+        }
+
+        public void put(int key, int value) {
+            hashMap.put(key,value);
+        }
+        protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+            if(cap + 1 == hashMap.size()){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 
     /**
@@ -97,6 +145,9 @@ public class TreeStrategy {
         preOrder(node);
         System.out.println("前序遍历结果："+res.toString());
         res.clear();
+        preOrderTwo(node);
+        System.out.println("前序遍历结果："+res.toString());
+        res.clear();
         middlerOrder(node);
         System.out.println("中序遍历结果："+res.toString());
         res.clear();
@@ -104,6 +155,8 @@ public class TreeStrategy {
         System.out.println("后序遍历结果："+res.toString());
         levelOrder(node);
         System.out.println("层序遍历结果："+levelRes.toString());
+
+
     }
 
     private static class Node {
@@ -131,7 +184,7 @@ public class TreeStrategy {
             this.right = right;
         }
 
-        int data;
+        Integer data;
         Node left;
         Node right;
 
