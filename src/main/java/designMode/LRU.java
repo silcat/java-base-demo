@@ -88,7 +88,8 @@ public class LRU {
         public void put(int key,int value){
             Node x = new Node(key, value);
             if (map.containsKey(key)){
-                list.remove(x);
+                Node node = map.get(key);
+                list.remove(node);
                 list.addFirst(x);
                 map.put(key,x);
             }else {
