@@ -17,31 +17,53 @@ package designMode;
  */
 public class BitMap {
     byte[] bits;
+    int mark;
+    int arrang = 0;
+    int bsize = 1;
 
-    public BitMap(int cap) {
+    /**
+     * 后面优化为动态获取：d（i）= d（i-1）+ 2^i-1
+     * @param cap
+     */
+    public BitMap(int cap,int markp) {
+        bsize = 8/ markp;
         this.bits = new byte[getIndex(cap)+1];
+        this.mark = markp;
+
+        if (markp == 1){
+            arrang = 1;
+        }else if (markp == 2){
+            arrang = 3;
+        }
     }
     public int getIndex(int num){
-        return num>>>3;
+        return num >> bsize;
     }
     public int getPosition(int num){
-        return  num & 0x07;
+        return  num & (bsize - 1);
     }
 
     public void put(int num){
-        bits[getIndex(num)] |=1<<getPosition(num);
+        int bitNum = getNum(num)+1;
+        if (bitNum > 3){
+            return;
+        }
+        bits[getIndex(num)] &= ~(((arrang) << mark * getPosition(num)) & 0xFF);
+        bits[getIndex(num)] |=(((bitNum & (arrang)) << mark * getPosition(num))& 0xFF);
+    }
+    public int getNum(int num){
+        return (bits[getIndex(num)] &((arrang) << mark * getPosition(num)))>> mark * getPosition(num);
     }
     public boolean contain(int num){
-        return  (bits[getIndex(num)] & 1 << getPosition(num)) != 0;
+        return  (bits[getIndex(num)] & arrang << getPosition(num)) != 0;
     }
 
     public static void main(String[] args) {
-        int cap = 10000;
-        BitMap bitMap = new BitMap(cap);
-        for (int i= 0;i<cap;i++){
-            bitMap.put(i);
-        }
-        boolean contain = bitMap.contain(cap + 1);
-        boolean contain1 = bitMap.contain(123);
+        int cap = 10;
+        BitMap bitMap = new BitMap(cap,2);
+        bitMap.put(2);
+        int num1 = bitMap.getNum(2);
+        bitMap.put(2);
+        int num = bitMap.getNum(2);
     }
 }
