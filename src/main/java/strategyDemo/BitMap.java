@@ -1,4 +1,4 @@
-package designMode;
+package strategyDemo;
 
 /**
  * 一数据结构
@@ -20,6 +20,7 @@ public class BitMap {
     int mark;
     int arrang = 0;
     int bsize = 1;
+    int indexSize = 1;
 
     /**
      * 后面优化为动态获取：d（i）= d（i-1）+ 2^i-1
@@ -27,17 +28,19 @@ public class BitMap {
      */
     public BitMap(int cap,int markp) {
         bsize = 8/ markp;
-        this.bits = new byte[getIndex(cap)+1];
         this.mark = markp;
-
         if (markp == 1){
+            indexSize = 3;
             arrang = 1;
         }else if (markp == 2){
+            indexSize = 2;
             arrang = 3;
         }
+        this.bits = new byte[getIndex(cap)+1];
+        int length = bits.length;
     }
     public int getIndex(int num){
-        return num >> bsize;
+        return num >> indexSize;
     }
     public int getPosition(int num){
         return  num & (bsize - 1);
@@ -45,7 +48,7 @@ public class BitMap {
 
     public void put(int num){
         int bitNum = getNum(num)+1;
-        if (bitNum > 3){
+        if (bitNum > 1){
             return;
         }
         bits[getIndex(num)] &= ~(((arrang) << mark * getPosition(num)) & 0xFF);
