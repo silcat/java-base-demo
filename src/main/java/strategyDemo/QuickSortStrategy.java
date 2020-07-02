@@ -109,7 +109,7 @@ public class QuickSortStrategy {
             list.set(right-1,temp);
         }
         min(list,start,left-1);
-        min(list,left+1,end);
+        min(list,right,end);
 
     }
     static void min( int[] arr1){
@@ -120,7 +120,7 @@ public class QuickSortStrategy {
         min(list,0,list.size()-1);
         int l =0;
         String left = list.get(0) ;
-        while (l+1<list.size()-1){
+        while (l+1<list.size()){
             if ((left+list.get(l+1)).compareTo(list.get(l+1)+left)< 0){
                 left = left +list.get(l+1);
             }else {
