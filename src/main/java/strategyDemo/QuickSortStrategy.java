@@ -1,6 +1,10 @@
 package strategyDemo;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class QuickSortStrategy {
     /**
@@ -75,12 +79,66 @@ public class QuickSortStrategy {
         a[right] = temp;
     }
 
+    /**
+     * 自定义规则快排
+     */
+    static void min(List<String> list ,int start ,int end){
+        if (start>= end){
+            return;
+        }
+        int left = start+1;
+        int right = end;
+        while (left < right){
+            while (left<right && ((list.get(left) + list.get(start)).compareTo(list.get(start) + list.get(left)) >= 0)){
+                left++;
+            }
+            while (left<right && ((list.get(right) + list.get(start)).compareTo(list.get(start) + list.get(right)) <= 0)){
+                right--;
+            }
+            String temp = list.get(left);
+            list.set(left,list.get(right));
+            list.set(right,temp);
+        }
+        if ((list.get(right) + list.get(start)).compareTo(list.get(start) + list.get(right)) < 0){
+            String temp = list.get(start);
+            list.set(start,list.get(right));
+            list.set(right,temp);
+        }else {
+            String temp = list.get(start);
+            list.set(start,list.get(right-1));
+            list.set(right-1,temp);
+        }
+        min(list,start,left-1);
+        min(list,left+1,end);
 
-
+    }
+    static void min( int[] arr1){
+        List<String> list = Lists.newArrayList();
+        for (int i = 0;i< arr1.length;i++){
+            list.add(String.valueOf(arr1[i]));
+        }
+        min(list,0,list.size()-1);
+        int l =0;
+        String left = list.get(0) ;
+        while (l+1<list.size()-1){
+            if ((left+list.get(l+1)).compareTo(list.get(l+1)+left)< 0){
+                left = left +list.get(l+1);
+            }else {
+                left=  list.get(l+1)+left;
+            }
+           l++;
+        }
+        System.out.println(left);
+    }
 
     public static void main(String[] args) {
-        int[] arr = {5, 6, 5,7,9, 4,5, 3,5, 2, 1};
-        twoSort(arr, 0, arr.length - 1);
-        System.out.println(Arrays.toString(arr));
+//        int[] arr = {5, 6, 5,7,9, 4,5, 3,5, 2, 1};
+//        twoSort(arr, 0, arr.length - 1);
+//        System.out.println(Arrays.toString(arr));
+
+        int[] arr1 = {6,30,3,21,5};
+
+        min(arr1);
+
     }
 }
