@@ -53,9 +53,88 @@ public class DynamicPlanStrategy {
         }
         return 0;
     }
+
+    public static int count(String s){
+        if("".equals(s)){
+            return -1;
+        }
+
+        char[] chars =  s.toCharArray();
+        if(chars.length == 1){
+            return 1;
+        }
+        int left = 0;
+        int right = 0;
+        int maxNum = 0;
+        char[] set = new char[256];
+        while(left < chars.length && right < chars.length){
+
+            if(set[chars[right]]!= 0 ){
+                set[chars[left]]--;
+                left++;
+            }else{
+                set[chars[right]]++;
+                right++;
+
+            }
+
+            maxNum = Math.max(maxNum,right-left);
+        }
+        return maxNum;
+
+    }
+    public static int count(int sum ,int[] coins){
+        if(sum <= 0)return 0;
+        int[] dp = new int[sum+1];
+        dp[0] = 1;
+        for(int i = 0; i < coins.length; i++) {
+            for (int j = coins[i]; j <= sum; j++) {
+                dp[j] = dp[j] + dp[j - coins[i]];
+            }
+        }
+            return dp[sum];
+
+    }
+    private static void mergeCoins(int n, int[] demo) {
+        Scanner scanner = new Scanner(System.in);
+        int[] arr = new int[n];
+        int[] sum = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = demo[i];
+            sum[i] = i == 0 ? arr[i] : arr[i] + sum[i - 1];
+        }
+        int[][] dp = new int[n][n];
+        for(int dunm= 2;dunm<=n;dunm++){
+            for(int begin = 0;begin < n - dunm + 1  ;begin++ ){
+                int end = begin + dunm -1;
+                dp[begin][end] = Integer.MAX_VALUE;
+                if(begin == end){
+                    dp[begin][end] = 0;
+                }else if(end == begin + 1){
+                    if(begin == 0){
+                        dp[begin][end] = sum[end];
+                    }else{
+                        dp[begin][end] = sum[end] - sum[begin - 1];
+                    }
+                }else{
+                    dp[begin][end] = Integer.MAX_VALUE;
+                    int sumbd = begin == 0 ? sum[end] : sum[end] - sum[begin - 1];
+                    for(int index = begin;index < end;index++) {
+                        dp[begin][end] = Math.min(dp[begin][end], dp[begin][index] + dp[index + 1][end] + sumbd);
+                    }
+                }
+            }
+        }
+
+        System.out.println(dp[0][n - 1]);
+    }
     public static void main(String[] args) {
-        int[] a = {1,2,3};
-        mincoin(a,11);
-        zuhe(a,4);
+
+        int[] a = {1,5,10,20,50,100};
+//        mincoin(a,11);
+//        zuhe(a,4);
+//        count("abcabcbb");
+        mergeCoins(4,a);
+        System.out.print(  count(8845,a));
     }
 }
