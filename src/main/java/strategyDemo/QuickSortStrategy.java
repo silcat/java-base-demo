@@ -80,19 +80,19 @@ public class QuickSortStrategy {
     }
 
     /**
-     * 自定义规则快排
+     * 自定义规则快排:最小的数
      */
     static void min(List<String> list ,int start ,int end){
         if (start>= end){
             return;
         }
-        int left = start+1;
+        int left = start + 1;
         int right = end;
         while (left < right){
-            while (left<right && ((list.get(left) + list.get(start)).compareTo(list.get(start) + list.get(left)) >= 0)){
+            while (left<right && ((list.get(left) + list.get(start)).compareTo(list.get(start) + list.get(left)) <= 0)){
                 left++;
             }
-            while (left<right && ((list.get(right) + list.get(start)).compareTo(list.get(start) + list.get(right)) <= 0)){
+            while (left<right && ((list.get(right) + list.get(start)).compareTo(list.get(start) + list.get(right)) >= 0)){
                 right--;
             }
             String temp = list.get(left);
@@ -113,10 +113,13 @@ public class QuickSortStrategy {
 
     }
     static void min( int[] arr1){
+
+
         List<String> list = Lists.newArrayList();
         for (int i = 0;i< arr1.length;i++){
             list.add(String.valueOf(arr1[i]));
         }
+//        list.sort((a, b) -> (a + b).compareTo(b + a));
         min(list,0,list.size()-1);
         int l =0;
         String left = list.get(0) ;
@@ -136,9 +139,9 @@ public class QuickSortStrategy {
 //        twoSort(arr, 0, arr.length - 1);
 //        System.out.println(Arrays.toString(arr));
 
-        int[] arr1 = {6,30,3,21,5};
-
+        int[] arr1 = {30,3,30,3,30};
         min(arr1);
+
 
     }
 }
