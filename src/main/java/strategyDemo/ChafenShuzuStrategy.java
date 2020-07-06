@@ -54,10 +54,41 @@ public class ChafenShuzuStrategy {
         return sum[end+1]-sum[start];
     }
 
+    /**
+     * 最大站台
+     */
+    public static void mState( int[] c, int start,int end){
+            c[start]++;
+            c[end]--;
+    }
+    /**
+     * 最大站台
+     */
+    public static void mState( ){
+        int[] c = new int[255];
+        int[] a = new int[255];
+        mState(c,4,7);
+        mState(c,2,6);
+        mState(c,2,5);
+        mState(c,1,2);
+        // 通过C数组重构aCep数组
+        int max = -1;
+        for(int i=0; i < c.length; i++) {
+            if(i > 0){
+                a[i] = c[i] + a[i-1];
+            } else{
+                a[0] = c[0];
+            }
+             max = Math.max(max, a[i]);
+        }
+        System.out.print(max);
+    }
+
 
     public static void main(String[] args) {
         int[] a ={2,3,4,5};
         max(a,a.length,3);
+        mState( );
 
     }
 
