@@ -13,9 +13,8 @@ public class ChafenShuzuStrategy {
      * 路由器 k 为接收最少距离
      */
     public static int max(int[] a, int n,int k){
-        //前缀和数组
-        int[] b = new int[n];
-        // 差分数组
+        //最大接收数组
+        int[] aCep = new int[n];
         int[] c = new int[n];
         for(int i=0; i < n; i++) {
             int l = Math.max(i-a[i], 0);
@@ -26,15 +25,15 @@ public class ChafenShuzuStrategy {
             }
         }
         int res = 0;
-        // 通过C数组重构B数组
+        // 通过C数组重构aCep数组
         for(int i=0; i < n; i++) {
             if(i > 0){
-                b[i] = c[i] + b[i-1];
+                aCep[i] = c[i] + aCep[i-1];
             } else{
-                b[0] = c[0];
+                aCep[0] = c[0];
             }
 
-            if(b[i] >= k) {
+            if(aCep[i] >= k) {
                 res++;
             }
 
