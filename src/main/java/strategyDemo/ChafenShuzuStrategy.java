@@ -1,6 +1,12 @@
 package strategyDemo;
 
-
+/**
+ * 差分数组：假如范围i到j的数组值加c，正常遍历o(n),差分数组通过b(i)+c与b(j+1)-c o(1)完成赋值;
+ * 原数组 a[]
+ * 差分数组 c[i] = a[i] - a[i -1]
+ * 前缀和数组b(i) = a[0] + ...a[i] = b[i-1]+a[i];
+ * 范围求和: b(i,j) =b(j) - b(i-1)
+ */
 public class ChafenShuzuStrategy {
 
     /**
