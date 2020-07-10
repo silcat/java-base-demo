@@ -51,6 +51,7 @@ public class TwoPartSortStrategy {
      *  二分查找
      **/
     public static int search(int[] arr, int data) {
+
         int min = 0;
         int max = arr.length - 1;
         int mid;
