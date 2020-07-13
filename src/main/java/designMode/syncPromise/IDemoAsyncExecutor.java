@@ -1,7 +1,10 @@
 package designMode.syncPromise;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 public interface IDemoAsyncExecutor {
    <V> IPromise<V> computeAsync(V v );
-   <V> IPromise<V> computeAsyncB(V v );
-   <V> IPromise<V> computeAsyncC(V v );
+   <V> V get(IPromise<V> v );
+
 }

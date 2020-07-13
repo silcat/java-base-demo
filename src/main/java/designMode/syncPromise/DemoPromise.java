@@ -1,6 +1,10 @@
 package designMode.syncPromise;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +24,8 @@ public class DemoPromise<T> extends CompletableFuture<T> implements IPromise<T> 
     /**
      * 回调监听器
      */
-    private ComplateFutureListener<? extends Future<?>>[] listeners;
+    private List<ComplateFutureListener<? extends IFuture<?>>> listeners;
+    private boolean notifyingListeners;
 
     /**
      * 初始化链路状态
@@ -75,11 +80,14 @@ public class DemoPromise<T> extends CompletableFuture<T> implements IPromise<T> 
     }
 
     @Override
-    public IPromise<T> addListener(ComplateFutureListener<? extends Future<? super T>> listener) {
+    public IPromise<T> addListener(ComplateFutureListener<? extends IFuture<? super T>> listener) {
         checkNotNull(listener, "listener");
 
         synchronized (this) {
-            addListener0(listener);
+            if (listeners == null){
+                listeners = Lists.newArrayList();
+            }
+            listeners.add(listener);
         }
 
         if (isDone()) {
@@ -89,9 +97,49 @@ public class DemoPromise<T> extends CompletableFuture<T> implements IPromise<T> 
         return this;
     }
 
+
+
+    private void notifyListeners() {
+        List<ComplateFutureListener<? extends IFuture<?>>>  listeners;
+        synchronized (this) {
+            if (notifyingListeners || this.listeners == null) {
+                return;
+            }
+            notifyingListeners = true;
+            listeners = this.listeners;
+            this.listeners = null;
+        }
+        int size = listeners.size();
+        for (;;) {
+            for (int i = 0; i < size; i ++) {
+                notifyListener0(this,listeners.get(0));
+            }
+            synchronized (this) {
+                if (this.listeners == null) {
+                    // Nothing can throw from within this method, so setting notifyingListeners back to false does not
+                    // need to be in a finally block.
+                    notifyingListeners = false;
+                    return;
+                }
+                listeners = this.listeners;
+                this.listeners = null;
+            }
+        }
+    }
+
+    private static void notifyListener0(IFuture future, ComplateFutureListener l) {
+        try {
+            l.operationComplete(future);
+        } catch (Throwable t) {
+        }
+    }
+
     @Override
-    public IPromise<T> removeListener(ComplateFutureListener<? extends Future<? super T>> listener) {
-        return null;
+    public IPromise<T> removeListener(ComplateFutureListener<? extends IFuture<? super T>> listener) {
+        synchronized (this) {
+           this.listeners .remove(listener);
+        }
+        return this;
     }
 
     @Override
@@ -106,14 +154,17 @@ public class DemoPromise<T> extends CompletableFuture<T> implements IPromise<T> 
 
     @Override
     public boolean isDone() {
-        return false;
+        return status != null ;
     }
 
     @Override
     public T get()  {
-        return null;
+        return getNow(null);
     }
-
+    @Override
+    public boolean isSuccess() {
+        return isDone() && !isCompletedExceptionally();
+    }
     @Override
     public T get(long timeout, TimeUnit unit)  {
         return null;

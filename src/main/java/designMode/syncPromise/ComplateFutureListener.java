@@ -1,9 +1,15 @@
 package designMode.syncPromise;
 
+import org.springframework.stereotype.Component;
+
 import java.util.EventListener;
 import java.util.concurrent.Future;
 
-public interface ComplateFutureListener<F extends Future<?>>  extends EventListener {
-    //完成回调监听
-    void operationComplete(F future) throws Exception;
+@Component
+public interface ComplateFutureListener<T extends IFuture<?>>  extends EventListener {
+    /**
+     *
+     */
+    void operationComplete(T future) throws Exception;
+
 }
