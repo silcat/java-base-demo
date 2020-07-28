@@ -62,6 +62,7 @@ public class BitMap {
     }
 
     public static void main(String[] args) {
+
         int cap = 10;
         BitMap bitMap = new BitMap(cap,2);
         bitMap.put(2);
