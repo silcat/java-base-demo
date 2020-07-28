@@ -8,13 +8,13 @@ public class DemoPipeline implements IDemoPipeline {
         this.head = new EventHandlerContext(new IEventHandler(){
             @Override
             public void handDoSomething(IEventHandlerContext ctx) {
-
+                ctx.fireEventDoSometing();
             }
         });
         this.tail =  new EventHandlerContext(new IEventHandler(){
             @Override
             public void handDoSomething(IEventHandlerContext ctx) {
-
+                ctx.fireEventDoSometing();
             }
         });
         head.next = tail;
