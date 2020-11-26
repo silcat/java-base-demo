@@ -3,6 +3,7 @@ package designMode.eventStream;
 import java.awt.*;
 
 public interface IEventHandlerContext  {
-   EventHandlerContext fireEventDoSometing();
+   EventHandlerContext fireEventRead();
+   EventHandlerContext fireEventWrite();
    IEventHandler handler();
 }

@@ -1,5 +1,8 @@
 package designMode.eventStream;
 
 public interface IEventHandler {
-    void handDoSomething(IEventHandlerContext ctx);
+    void begin(IEventHandlerContext ctx);
+    void read(IEventHandlerContext ctx);
+    void write(IEventHandlerContext ctx);
+    void end(IEventHandlerContext ctx);
 }

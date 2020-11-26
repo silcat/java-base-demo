@@ -25,7 +25,7 @@ public class Client {
             Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioSocketChannel.class)
-                    .remoteAddress(new InetSocketAddress(host, port))
+                    .remoteAddress(new InetSocketAddress(port))
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch)throws Exception {
@@ -40,12 +40,8 @@ public class Client {
         }
     }
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-                   return;
-        }
-        String host = args[0];
-        int port = Integer.parseInt(args[1]);
-        new Client(host, port).start();
+   ;
+        new Client(null, 9095).start();
     }
 }
 

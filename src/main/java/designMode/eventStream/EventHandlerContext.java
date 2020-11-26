@@ -11,9 +11,16 @@ public class EventHandlerContext implements IEventHandlerContext {
         this.handler = handler;
     }
 
+
     @Override
-    public EventHandlerContext fireEventDoSometing() {
-        invokeEventDoSometing(findNextEventHandler());
+    public EventHandlerContext fireEventRead() {
+        invokeEventRead(findNextEventHandler());
+        return this;
+    }
+
+    @Override
+    public EventHandlerContext fireEventWrite() {
+        invokeEventWrite(findNextEventHandler());
         return this;
     }
 
@@ -22,18 +29,30 @@ public class EventHandlerContext implements IEventHandlerContext {
         return this.handler;
     }
 
-    static void invokeEventDoSometing(EventHandlerContext ctx){
-        ctx.invokeEventDoSometing();
-    }
-
-    private void invokeEventDoSometing(){
+    private void invokeEventRead(){
         if (isExcute()){
-            fireEventDoSometing();
+            fireEventRead();
         }else {
-            handler().handDoSomething(this);
+            handler().read(this);
             this.handlerState = 1;
         }
     }
+    static void invokeEventRead(EventHandlerContext ctx){
+        ctx.invokeEventRead();
+    }
+
+    private void invokeEventWrite(){
+        if (isExcute()){
+            fireEventWrite();
+        }else {
+            handler().write(this);
+            this.handlerState = 1;
+        }
+    }
+    static void invokeEventWrite(EventHandlerContext  ctx){
+        ctx.invokeEventWrite();
+    }
+
     public Boolean isExcute(){
         return this.handlerState != 0;
     }

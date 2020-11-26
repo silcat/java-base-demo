@@ -1,20 +1,52 @@
 package designMode.eventStream;
 
-public class DemoPipeline implements IDemoPipeline {
+public class DemoPipeline implements IDemoPipeline,EventHandlerService {
     final EventHandlerContext head;
     final EventHandlerContext tail;
 
     public DemoPipeline() {
         this.head = new EventHandlerContext(new IEventHandler(){
+
             @Override
-            public void handDoSomething(IEventHandlerContext ctx) {
-                ctx.fireEventDoSometing();
+            public void begin(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void read(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void write(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void end(IEventHandlerContext ctx) {
+
             }
         });
         this.tail =  new EventHandlerContext(new IEventHandler(){
+
             @Override
-            public void handDoSomething(IEventHandlerContext ctx) {
-                ctx.fireEventDoSometing();
+            public void begin(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void read(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void write(IEventHandlerContext ctx) {
+
+            }
+
+            @Override
+            public void end(IEventHandlerContext ctx) {
+
             }
         });
         head.next = tail;
@@ -37,8 +69,19 @@ public class DemoPipeline implements IDemoPipeline {
         return null;
     }
 
+
     @Override
-    public void doSomeThing() {
-        head.fireEventDoSometing();
+    public void read() {
+        head.fireEventRead();
+    }
+
+    @Override
+    public void write() {
+        head.fireEventWrite();
+    }
+
+    @Override
+    public void accept() {
+
     }
 }
