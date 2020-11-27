@@ -52,6 +52,23 @@ public class EventHandlerContext implements IEventHandlerContext {
     static void invokeEventWrite(EventHandlerContext  ctx){
         ctx.invokeEventWrite();
     }
+    @Override
+    public EventHandlerContext fireEventAccept() {
+        invokeEventAccept(findNextEventHandler());
+        return this;
+    }
+    private static void invokeEventAccept(EventHandlerContext  ctx){
+        ctx.invokeEventAccept();
+    }
+    private void invokeEventAccept(){
+        if (isExcute()){
+            fireEventAccept();
+        }else {
+            handler().write(this);
+            this.handlerState = 1;
+        }
+    }
+
 
     public Boolean isExcute(){
         return this.handlerState != 0;
