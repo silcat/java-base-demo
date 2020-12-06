@@ -1,3 +1,4 @@
+转载：https://www.cnblogs.com/crazymakercircle/p/10225332.html
 1.1. zookeeper 安装&配置
 现在，我们开始使用三台机器来搭建一个Zookeeper集群。由于没有多余的服务器，这里就将三个Zk都安装到本地机器上，故称谓伪集群模式。
 
