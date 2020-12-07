@@ -1,4 +1,4 @@
-package zookeeper.example;
+package zookeeper.cure;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.utils.CloseableUtils;

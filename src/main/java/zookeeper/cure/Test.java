@@ -1,4 +1,4 @@
-package zookeeper.example;
+package zookeeper.cure;
 
 
 /**
@@ -7,7 +7,6 @@ package zookeeper.example;
 public class Test {
     public static void main(String[] args)  {
         IApi api = new Api();
-        api.createNode();
-        api.createNode();
+        api.readNode("");
     }
 }

@@ -1,4 +1,4 @@
-package zookeeper.example;
+package zookeeper.cure;
 
 /**
  * Created by yangtianfeng on 2020/12/6.
