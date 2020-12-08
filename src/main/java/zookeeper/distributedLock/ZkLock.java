@@ -45,14 +45,18 @@ public class ZkLock implements Lock {
     public boolean lock() {
 
         synchronized (this) {
+            //可重入锁
             if (lockCount.get() == 0) {
                 thread = Thread.currentThread();
                 lockCount.incrementAndGet();
             } else {
+                System.out.println("获取可重入锁 begin " );
                 if (!thread.equals(Thread.currentThread())) {
+                    System.out.println("获取可重入锁失败" );
                     return false;
                 }
                 lockCount.incrementAndGet();
+                System.out.println("获取可重入锁成功" );
                 return true;
             }
         }
@@ -101,6 +105,7 @@ public class ZkLock implements Lock {
         }
 
         if (newLockCount != 0) {
+            System.out.println("可重入锁次数不为1" );
             return true;
         }
         try {
@@ -163,7 +168,7 @@ public class ZkLock implements Lock {
         treeCache.start();*/
         latch.await(WAIT_TIME, TimeUnit.SECONDS);
     }
-
+    //最小的节点获取锁
     private boolean tryLock() throws Exception {
         //创建临时Znode
         locked_path = ZKclient.instance

@@ -6,6 +6,9 @@ import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.junit.Test;
 import zookeeper.ZKclient;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * create by 尼恩 @ 疯狂创客圈
  **/
@@ -16,7 +19,35 @@ public class ZkLockTester {
 
     @Test
     public void testLock() throws InterruptedException {
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++) {
+            if (i == 0){
+                threadPool.submit(()->{
+                    ZkLock lock = new ZkLock();
+                    lock.lock();
+                    lock.lock();
+                    for (int j = 0; j < 10; j++) {
+                        count++;
+                    }
+
+                    log.info("count = " + count);
+                    lock.unlock();
+                    lock.unlock();
+                });
+            }else {
+                threadPool.submit(()->{
+                    ZkLock lock = new ZkLock();
+                    lock.lock();
+
+                    for (int j = 0; j < 10; j++) {
+                        count++;
+                    }
+
+                    log.info("count = " + count);
+                    lock.unlock();
+                });
+            }
+
 
         }
 
