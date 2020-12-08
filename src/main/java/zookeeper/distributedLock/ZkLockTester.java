@@ -6,6 +6,7 @@ import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.junit.Test;
 import zookeeper.ZKclient;
 
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,9 +20,11 @@ public class ZkLockTester {
 
     @Test
     public void testLock() throws InterruptedException {
+
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++) {
             if (i == 0){
+                //测试可重入锁
                 threadPool.submit(()->{
                     ZkLock lock = new ZkLock();
                     lock.lock();

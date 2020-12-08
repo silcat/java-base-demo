@@ -1,4 +1,4 @@
-
+import static javax.xml.bind.DatatypeConverter.printLong;
 
 public class test {
 
@@ -15,14 +15,19 @@ public class test {
 
 
 //        print(RUNNING&CAPACITY);
-        print(c+1);
-        print(~CAPACITY);
-        print(c+1 & ~CAPACITY);
+//        print(c+1);
+        printLong(~(-1L << 12));
+        printLong(~(-1L << 12)&4096);
+//        print(c+1 & ~CAPACITY);
 //        print((c+1)&CAPACITY);
 
     }
     private static void print( Integer num){
         System.out.println(num);
         System.out.println(Integer.toBinaryString(num));
+    }
+    private static void printLong( Long num){
+        System.out.println(num);
+        System.out.println(Long.toBinaryString(num));
     }
 }
