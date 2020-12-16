@@ -63,7 +63,6 @@ shm                                                    64M     0   64M   0% /dev
 tmpfs                                                  63G     0   63G   0% /proc/acpi
 tmpfs                                                  63G     0   63G   0% /proc/scsi
 tmpfs                                                  63G     0   63G   0% /sys/firmware
-172.16.2.57:test_volume/haofenqi/haofenqi-api-server  183G  146G   38G  80% /opt/webroot/youxin_img_gfs
 ````
 * iostat -d 2 3
 ##系统状态
