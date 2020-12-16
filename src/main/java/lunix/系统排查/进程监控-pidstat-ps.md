@@ -15,27 +15,19 @@
     -h：在一行上显示了所有活动，这样其他程序可以容易解析。
     -I：在SMP环境，表示任务的CPU使用率/内核数量
     -l：显示命令名和所有参数
- 
   ````
 * 格式: ps option pid 
 * option：
 ````
-    -au 显示较详细的资讯
-    -aux 显示所有包含其他使用者的行程 
-    -N 反向选择
-    -e 等于“-A”
-    -a 显示同一终端下的所有程序
-    -H 显示树状结构
-    -A 显示所有进程
-    a  显示所有进程
-    u  指定用户的所有进程
-    c  显示进程的真实名称
-    e  显示环境变量
-    f  显示程序间的关系
-    r  显示当前终端的进程
-    T  显示当前终端的所有程序
-    
-  
+   -f: full 展示进程详细信息
+   -e: every 展示所有进程信息
+   -ax: all 与 -e 同,展示所有进程信息
+   -o: 设置输出格式, 可以指定需要输出的进程信息列
+   -L: 展示线程信息
+   -C: 获取指定命令名的进程信息
+   -t: tty 展示关联指定 tty 的进程
+   --forest: 展示进程数
+   --sort: 按照某个或者某些进程信息列排序展示
 ````
 ##命令示例
 * pidstat  
@@ -132,6 +124,30 @@ root      8777  8442  0 15:32 pts/1    00:00:00 ps -ef
  PPID ：父进程id
  LWP：线程id
  NLWP : 线程的数量
+````
+* ps -Lf 17(查看进程cpu的线程)
+````
+ UID        PID  PPID   LWP  C NLWP STIME TTY      STAT   TIME CMD
+ app         17     1    17  0  159 Dec11 ?        Sl     0:00 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+ app         17     1    24  0  159 Dec11 ?        Sl     0:10 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+ app         17     1    25  0  159 Dec11 ?        Sl     0:01 java -serv
+ =====================================================================================================
+ PPID ：父进程id
+ LWP：线程id
+ NLWP : 线程的数量
+````
+* ps -mp 17 -o THREAD,tid,time 
+````
+USER     %CPU PRI SCNT WCHAN  USER SYSTEM   TID     TIME
+app       0.2   -    - -         -      -     - 00:21:25
+app       0.0  19    - futex_    -      -    17 00:00:00
+app       0.0  19    - futex_    -      -    24 00:00:10
+app       0.0  19    - futex_    -      -    25 00:00:01
+app       0.0  19    - futex_    -      -    26 00:00:01
+app       0.0  19    - futex_    -      -    27 00:00:01
+app       0.0  19    - futex_    -      -    28 00:00:01
+app       0.0  19    - futex_    -      -    29 00:00:01
+app       0.0  19    - futex_    -      -    30 00:00:01
 ````
 * 理解 Linux的进程，线程，PID，LWP，TID，TGID
   * 1.含义
