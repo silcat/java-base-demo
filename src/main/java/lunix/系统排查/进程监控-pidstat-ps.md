@@ -17,6 +17,26 @@
     -l：显示命令名和所有参数
  
   ````
+* 格式: ps option pid 
+* option：
+````
+    -au 显示较详细的资讯
+    -aux 显示所有包含其他使用者的行程 
+    -N 反向选择
+    -e 等于“-A”
+    -a 显示同一终端下的所有程序
+    -H 显示树状结构
+    -A 显示所有进程
+    a  显示所有进程
+    u  指定用户的所有进程
+    c  显示进程的真实名称
+    e  显示环境变量
+    f  显示程序间的关系
+    r  显示当前终端的进程
+    T  显示当前终端的所有程序
+    
+  
+````
 ##命令示例
 * pidstat  
 ##系统状态
@@ -88,7 +108,44 @@ System-ms:任务和子线程在系统级别使用的毫秒数。
 Guest-ms:任务和子线程在虚拟机(running a virtual processor)使用的毫秒数。
 Command:命令名
 ````
+* ps -aux (查看进程cpu和内存)
+````
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+app         17  0.2  0.7 12799748 952352 ?     Sl   Dec11  20:32 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateSta
+root      8453  0.0  0.0  53320  3912 pts/1    R+   11:16   0:00 ps -aux
 
-
-
-
+````
+* ps -ef(查看进程cpu和内存)
+````
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 Dec11 ?        00:00:00 sh /run.sh
+app         17     1  0 Dec11 ?        00:21:12 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCT
+root      8777  8442  0 15:32 pts/1    00:00:00 ps -ef
+````
+* ps -Lf 17(查看进程cpu的线程)
+````
+ UID        PID  PPID   LWP  C NLWP STIME TTY      STAT   TIME CMD
+ app         17     1    17  0  159 Dec11 ?        Sl     0:00 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+ app         17     1    24  0  159 Dec11 ?        Sl     0:10 java -server -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+ app         17     1    25  0  159 Dec11 ?        Sl     0:01 java -serv
+ =====================================================================================================
+ PPID ：父进程id
+ LWP：线程id
+ NLWP : 线程的数量
+````
+* 理解 Linux的进程，线程，PID，LWP，TID，TGID
+  * 1.含义
+````
+pid: 进程ID。
+lwp: 线程ID。在用户态的命令(比如ps)中常用的显示方式。
+tid: 线程ID，等于lwp。tid在系统提供的接口函数中更常用，比如syscall(SYS_gettid)和syscall(__NR_gettid)。
+tgid: 线程组ID，也就是线程组leader的进程ID，等于pid。
+------分割线------
+pgid: 进程组ID，也就是进程组leader的进程ID。
+pthread id: pthread库提供的ID，生效范围不在系统级别，可以忽略。
+sid: session ID for the session leader。
+tpgid: tty process group ID for the process group leader
+````  
+  * 2.理解
+    *  PID=TGID: TID=LWP
+    *  对于用户程序lwp是一个线程，但对于对于lunix系统层面讲没有线程，lwp是一个轻量级进程。
