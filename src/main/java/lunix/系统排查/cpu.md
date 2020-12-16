@@ -7,6 +7,16 @@
    -i 秒数　　　 屏幕刷新间隔时间
    -b　　　　　　以批处理模式操作  
   ````
+#vmstat命令
+* 格式: vmstat option  
+  * option：
+  ````
+    -a 显示活跃内存（active）和非活跃内存（inact）
+    -f 显示从系统启动至今的fork数量 
+    -m 显示slabinfo
+    -s 静态显示内存相关信息
+ 
+  ````  
 ##命令示例
 * top -d 2 -n 3 -b > test.txt  将top以2秒间隔循环3次保存到test.txt文件
 ##系统状态
@@ -57,16 +67,6 @@ RES:进程使用的物理内存大小
 SHR:共享内存大小
 TIME+：进程使用的CPU时间总计
 ````
-#vmstat命令
-* 格式: vmstat option  
-  * option：
-  ````
-    -a 显示活跃内存（active）和非活跃内存（inact）
-    -f 显示从系统启动至今的fork数量 
-    -m 显示slabinfo
-    -s 静态显示内存相关信息
- 
-  ````
   
 ## 命令示例
 * vmstat 1 10 （查看内存使用的动态变化）
