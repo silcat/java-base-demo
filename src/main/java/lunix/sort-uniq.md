@@ -17,42 +17,85 @@
     -m：将几个排序号的文件进行合并； 
     -M：将前面3个字母依照月份的缩写进行排序； 
   ````
-* 格式: uniq option1 num1 | option2 num2  filename （从下倒上查看）
+* 格式: uniq option  filename （从下倒上查看）
   * option：
-    * -n num(日志尾部最后num行日志) , 
-    * -n +num(从第num行到文末) ,
-    * -f/-numf(循环读取尾部num行日志) 
-    * -c num(最后num个字符) 
+  ````
+    -c：在每列旁边显示该行重复出现的次数； 
+    -u：仅显示不重复的行； 
+    -d:仅显示重复出现的行列； 
+    -f<栏位>：忽略比较指定的栏位； 
+    -s<n>：忽略比较文件中的前n个字符； 
+    -w<n>：比较文件中的前n个字符。
+  ````
 * 格式: tail option1 num1 | option2 num2  filename （从下倒上查看）
   * option：
     * -n num(前num行日志) , 
     * -c num(前num个字符) 
 ##test文件内容
 ````
-1：2
-2：3
-3：5
-4：4
+aa  10
+aa  11
+bb  13
+cc  19
+ee  15
+cc  19
 ````
 ##正则表达式
 
-* sort -n -k 2 -t ":" test -o test1
+* sort  -k 2 -t " " test 
   
 ````
-1：2
-2：3
-4：4
-3：5
+aa  10
+aa  11
+bb  13
+ee  15
+cc  19
+cc  19
 ````
-* cat >test1 << EOF 创建test1文件
+* sort  -k 2 -t " " -r test 
 ````
->test1
->test2
->EOF
+cc  19
+cc  19
+ee  15
+bb  13
+aa  11
+aa  10
 ````
-* cat test1
+* sort -k 2 -t " " -u test
 ````
-test1
-test2
+aa  10
+aa  11
+bb  13
+ee  15
+cc  19
+````
+* uniq -c命令只有在相邻的情况下才会生效
+* awk -F " " '{print $2}' test |sort | uniq -c
+````
+1 
+1 10
+1 11
+1 13
+1 15
+2 19
+````
+* awk -F " " '{print $2}' test  | uniq -c
+````
+1 
+1 10
+1 11
+1 13
+1 19
+1 15
+1 19
+````
+* awk -F " " '{print $2}'  test|sort | uniq -c |sort -n -r -o > test1
+````
+  2 19
+  1 15
+  1 13
+  1 11
+  1 10
+  1 
 ````
 
