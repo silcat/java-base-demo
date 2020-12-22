@@ -4,7 +4,6 @@ public class ThreadGroupTest {
     public static void main(String[] args) throws InterruptedException {
         //主线程对应的线程组
         printGroupInfo(Thread.currentThread());//线程组为main父线程组为system
-
         //新建线程，系统默认的线程组
         Thread appThread = new Thread(()->{},"appThread");
         printGroupInfo(appThread);//线程组为main父线程组为system
@@ -12,6 +11,7 @@ public class ThreadGroupTest {
         //自定义线程组
         ThreadGroup factoryGroup=new ThreadGroup("factory");
         Thread workerThread=new Thread(factoryGroup,()->{},"worker");
+        workerThread.join();
         printGroupInfo(workerThread);//线程组为factory，父线程组为main
 
         //设置父线程组

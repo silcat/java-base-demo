@@ -129,6 +129,18 @@ G1 Old Generation:
    47.625296456473215% used
 
 38537 interned Strings occupying 4401704 bytes.
-================================================================================
+````
+* jmap -histo:live 90 
+````
+          对象数量          占用内存   对象名
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:        134799       15606792  [C
+   2:          7194        7586072  [B
+   3:         36819        4065440  [Ljava.lang.Object;
+   4:        123305        3945760  java.util.concurrent.ConcurrentHashMap$Node
+   5:         38576        3394688  java.lang.reflect.Method
+   6:        133789        3210936  java.lang.String
+   7:         19543        2171720  java.lang.Class
                                                                      
 ````
