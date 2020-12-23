@@ -144,3 +144,4 @@ G1 Old Generation:
    7:         19543        2171720  java.lang.Class
                                                                      
 ````
+* jmap -dump:live,format=b,file=heap.bin 90
