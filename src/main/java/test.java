@@ -3,6 +3,8 @@ import static javax.xml.bind.DatatypeConverter.printLong;
 public class test {
 
     public static void main(String[] args)  {
+        Integer i = -1;
+        System.out.println(-1==i);
         int c = -1 << 29;
         int RUNNING = -1 << 29;
         int CAPACITY   = (1 << 29) - 1;
