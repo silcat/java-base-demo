@@ -97,18 +97,33 @@
         * https://blog.csdn.net/men_wen/article/details/72896682
         * https://mp.weixin.qq.com/s/cOK6IRQkavnV8EUhppfgug
     * 集群模式实现了Redis数据的分布式存储，实现数据的分片，每个redis节点存储不同的内容，并且解决了在线的节点收缩（下线）和扩容（上线）问题。    
-##redis的缓存淘汰机制
-* https://www.jianshu.com/p/857282187164
-* Redis的所有数据都存储在内存中，但是内存是一种有限的资源,当Redis使用的内存超过配置的 maxmemory 时，便会触发数据淘汰策略。Redis提供了多种数据淘汰的策略，如下：
-  
-````
-volatile-lru: 最近最少使用算法，从设置了过期时间的键中选择空转时间最长的键值对清除掉
-volatile-lfu: 最近最不经常使用算法，从设置了过期时间的键中选择某段时间之内使用频次最小的键值对清除掉
-volatile-ttl: 从设置了过期时间的键中选择过期时间最早的键值对清除
-volatile-random: 从设置了过期时间的键中，随机选择键进行清除
-allkeys-lru: 最近最少使用算法，从所有的键中选择空转时间最长的键值对清除
-allkeys-lfu: 最近最不经常使用算法，从所有的键中选择某段时间之内使用频次最少的键值对清除
-allkeys-random: 所有的键中，随机选择键进行删除
-noeviction: 不做任何的清理工作，在redis的内存超过限制之后，所有的写入操作都会返回错误；但是读操作都能正常的进行
-````
+
 * 可以在启动Redis时，通过配置项maxmemory_policy来指定要使用的数据淘汰策略。例如要使用volatile-lru策略可以通过以下配置来指定：maxmemory_policy volatile-lru
+##redis 过期key的删除策略
+* https://www.cnblogs.com/chenpingzhao/p/5022467.html?utm_source=tuicool&utm_medium=referral
+* 被动删除：当读/写一个已经过期的key时，会触发惰性删除策略，直接删除掉这个过期key
+* 主动删除：由于惰性删除策略无法保证冷数据被及时删掉，所以Redis会定期主动淘汰一批已过期的key
+    * Redis 将 serverCron 确保它每隔一段时间就会自动运行一次 serverCron 会一直定期执行，直到服务器关闭为止。
+    * 用户可以通过修改 hz选项来调整 serverCron 的每秒执行次数
+    * 当REDIS运行在主从模式时，只有主结点才会执行上述这两种过期删除策略，然后把删除操作”del key”同步到从结点
+* 当前已用内存超过maxmemory限定时，触发主动清理策略
+   * https://www.jianshu.com/p/857282187164
+   ````
+   volatile-lru: 最近最少使用算法，从设置了过期时间的键中选择空转时间最长的键值对清除掉
+   volatile-lfu: 最近最不经常使用算法，从设置了过期时间的键中选择某段时间之内使用频次最小的键值对清除掉
+   volatile-ttl: 从设置了过期时间的键中选择过期时间最早的键值对清除
+   volatile-random: 从设置了过期时间的键中，随机选择键进行清除
+   allkeys-lru: 最近最少使用算法，从所有的键中选择空转时间最长的键值对清除
+   allkeys-lfu: 最近最不经常使用算法，从所有的键中选择某段时间之内使用频次最少的键值对清除
+   allkeys-random: 所有的键中，随机选择键进行删除
+   noeviction: 不做任何的清理工作，在redis的内存超过限制之后，所有的写入操作都会返回错误；但是读操作都能正常的进行
+   ````
+* redis.config配置
+````
+hz 10 
+maxmemory-policy volatile-lru 
+maxmemory-samples 5
+````  
+* 删除过期key的数据一致性
+     * 当一个key过期时DEL操作将被记录在AOF文件并传递到所有相关的slave。也即过期删除操作统一在master实例中进行并向下传递，而不是各salve各自掌控。这样一来便不会出现数据不一致的情形。
+     * 当slave连接到master后并不能立即清理已过期的key（需要等待由master传递过来的DEL操作），slave仍需对数据集中的过期状态进行管理维护以便于在slave被提升为master会能像master一样独立的进行过期处理。
