@@ -54,7 +54,7 @@ public class ConcurrentLRU {
         }
 
 
-        private  CacheManager getCacheManagerInstance() {
+        private static   CacheManager getCacheManagerInstance() {
             return CacheManagerFactory.CACHE_MANAGER;
         }
 
@@ -175,7 +175,7 @@ public class ConcurrentLRU {
         }
 
 
-        public Object put(Object key, Object value) throws Exception {
+        public  Object put(Object key, Object value) throws Exception {
 
             //判断缓存大小是否够用，否则根据LRU删除最久未使用的元素
             if (cacheEntryMap.size() > MAX_CACHE_SIZE) {
@@ -244,7 +244,7 @@ public class ConcurrentLRU {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         CacheManager cacheManager = CacheManager.getCacheManagerInstance();
         cacheManager.init(0);
 
