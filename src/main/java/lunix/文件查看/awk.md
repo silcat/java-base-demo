@@ -71,3 +71,4 @@ awk -F "[ :]" '$2~/addr/{print NR,$0}' test
 ````
 2 Mask:255.255.255.0
 ````
+awk '/\d{4}\-02-\d{1,2}/{print NR,$0} ' institution.es

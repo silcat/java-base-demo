@@ -134,6 +134,7 @@ public class LRU {
             return size() > cap;
         }
     }
+
     public static void main(String[] args) {
         LRUZD cache = new LRU().new LRUZD(2);
         cache.put(1, 1);
