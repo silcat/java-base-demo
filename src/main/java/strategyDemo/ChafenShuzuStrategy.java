@@ -15,14 +15,10 @@ public class ChafenShuzuStrategy {
     public static int max(int[] a, int n,int k){
         //最大接收数组
         int[] aCep = new int[n];
-        int[] c = new int[n];
+        int[] c = new int[n+1];
         for(int i=0; i < n; i++) {
-            int l = Math.max(i-a[i], 0);
-            int r = Math.min(i+a[i], n-1);
-            c[l] += 1;
-            if(r+1 < n) {
-                c[r+1] -= 1;
-            }
+            c[Math.max(i-a[i], 0)] ++;
+            c[Math.min(i+a[i]+1, n)] --;
         }
         int res = 0;
         // 通过C数组重构aCep数组
@@ -86,7 +82,7 @@ public class ChafenShuzuStrategy {
 
 
     public static void main(String[] args) {
-        int[] a ={2,3,4,5};
+        int[] a ={1,1,1,1};
         max(a,a.length,3);
         mState( );
 

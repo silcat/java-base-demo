@@ -17,8 +17,17 @@
     }
     return root.next.value;
     ````
-* 请编写一个红包随机算法。需求为：给定一定的金额，一定的人数，保证每个人都能随机获得一定的金额。比如100元的红包，10个人抢，每人分得一些金额。约束条件为，最佳手气金额不能超过最大金额的90%。
 * 节点，并且返回链表的头结点。例如，对一个链表: 1->2->3->4->5, 和 n = 2. 当删除了倒数第二个节点后，链表变为 1->2->3->5. 说明:给定的 n 保证是有效的。要求:只允许对链表进行一次遍历。
+````
+node fast= head.next;
+node slow = head;
+while(fast.next!=null){
+     pre = slow;
+     slow =slow.next;
+}
+slow.next = fast,next;
+return head
+````
 * 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
 * 找到一个无序数组中找两个特定数，使其相加等于特定数字，请写代码java将它找出来，并指出时间复杂度。例如 【10,25,19,89,75,56,34,54,16，9，-5】找到相加等于28的【19，9 】
     ````
@@ -104,11 +113,64 @@
 
 # 系统设计
 * 设计最多保存n个项目的本地缓存的类，用于缓存，需要满足LRU、线程安全
-````
-````
+·* ConcurrentLRU
 * 有一个系统，由于可靠性的原因，要求把系统数据完整保存在3个不同的物理机上。外部的应用需要对这些数据进行读写操作。如果让你来设计这个系统，你会考虑采用什么方案，请简要说明思路即可。
+    * 单机可靠性
+        * write before logging
+        * 数据持久化与回滚
+        * 硬件及网络管理
+    * 分布式可靠性
+        * 主从复制
+        * 多副本
+        * 选举策略
 * 根据钉钉群组红包的游戏规则（用户发红包，用户领红包，用户可以查看红包），设计一套红包的数据表结构
+````
+group            user           db_xx.t_redpack_d   db_xx.t_y_redpack_record
+group_id         uid            pack_id             uid
+name             group_id       amount              pack_id 
+company          name           pack_num            amount
+                                group_id
+                                remain_amount
+其中pack_id：雪花ID+XXY,XX为库名，Y为表名                             
+````
+* 请编写一个红包随机算法。需求为：给定一定的金额，一定的人数，保证每个人都能随机获得一定的金额。比如100元的红包，10个人抢，每人分得一些金额。约束条件为，最佳手气金额不能超过最大金额的90%。
+````
+   Scanner sc = new Scanner(System.in);
+          List<Double> list = null;
+          double money = 0;
+          Random random = new Random();
+          while (sc.hasNext()) {
+              double totalMoney = sc.nextDouble();
+              int count = sc.nextInt();
+              list = new ArrayList<>(count);
+              while (count > 1) {
+                  double max = totalMoney * 0.3;
+                  double r = random.nextDouble();
+                  money = r * max;
+                  if (money < 1) {
+                      money = 1;
+                  } else {
+                      money = Math.floor(money * 100) / 100;
+                  }
+                  list.add(money);
+                  count--;
+                  totalMoney -= money;
+              }
+              list.add(Math.floor(totalMoney * 100) / 100);
+              System.out.println(list);
+          }
+````
 * 通过JDK自带工具实现一个间隔并发执行的定时任务
+````
+  ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+        scheduledThreadPoolExecutor.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                System.out.print(LocalDateTime.now() + " ");
+                System.out.println(Thread.currentThread().getName() + "= test scheduleWithFixedDelay......");
+            }
+        }, 3, 2, TimeUnit.SECONDS);
+````
 #命令查询
 * 通过java实现如下shell命令:sed -i 's/abc/efg/g' *.txt 约束:1.文件比较小，2.单进程允许创建的最大线程数10，3.需要考虑线程复用。
   *  base.stream

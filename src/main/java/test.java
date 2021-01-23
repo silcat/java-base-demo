@@ -3,11 +3,13 @@ import static javax.xml.bind.DatatypeConverter.printLong;
 public class test {
 
     public static void main(String[] args)  {
-        Integer i = -1;
-        System.out.println(-1==i);
-        int c = -1 << 29;
-        int RUNNING = -1 << 29;
-        int CAPACITY   = (1 << 29) - 1;
+
+
+
+        long workerId= 32L;
+        long time = System.currentTimeMillis()-1483200000000L << 23;
+        long sequence  = 1024L ;
+        long l = time | workerId | sequence;
 //        print(RUNNING);
 //        print(CAPACITY);
 //        print(0 << 29);
@@ -18,7 +20,7 @@ public class test {
 
 //        print(RUNNING&CAPACITY);
 //        print(c+1);
-        printLong(~(-1L << 12));
+        printLong(l );
         printLong(~(-1L << 12)&4096);
 //        print(c+1 & ~CAPACITY);
 //        print((c+1)&CAPACITY);
