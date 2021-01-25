@@ -6,3 +6,6 @@
 * 深拷贝和浅拷贝是只针对Object和Array这样的引用数据类型的
 * 浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存。
 * 深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。
+#String的不可变性
+* https://www.cnblogs.com/think-in-java/p/6127804.html
+* https://www.zhihu.com/question/20618891
