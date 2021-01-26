@@ -18,6 +18,19 @@
 19877 Jps -Denv.class.path=.:/opt/app/jdk1.8.0_131/lib/dt.jar:/opt/app/jdk1.8.0_131/lib/tools.jar -Dapplication.home=/opt/app/jdk1.8.0_131 -Xms8m
 90 jar -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+StartAttachListener -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/app/logs/java.hprof
 ````
+* jinfo -flags pid 查看当前JVM运行的参数
+````
+Attaching to process ID 90, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 25.131-b11
+Non-default VM flags: -XX:CICompilerCount=15 -XX:ConcGCThreads=7 -XX:+DisableExplicitGC -XX:G1HeapRegionSize=1048576 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=null -XX:InitialHeapSize=536870912 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=536870912 -XX:MaxNewSize=321912832 -XX:MinHeapDeltaBytes=1048576 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+StartAttachListener -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC 
+Command line:  -Xms512m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+StartAttachListener -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/app/logs/java.hprof
+````
+*  jinfo -sysprops pid 输出当前JVM进程所有的系统属性
+````
+
+````
 
 #JVM启动参数
 ##分类

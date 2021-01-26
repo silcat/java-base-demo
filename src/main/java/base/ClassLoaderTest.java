@@ -4,6 +4,9 @@ import juc.Test;
 import oracle.jrockit.jfr.events.Bits;
 import sun.security.ec.CurveDB;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,6 +15,9 @@ import java.util.List;
 public class ClassLoaderTest {
 
     public static void main(String[] args) throws Exception {
+        classLoader();
+    }
+    public static void classLoader(){
         System.out.println("-------------启动类加载器------------");
         System.out.println(System.getProperty("sun.boot.class.path"));
         System.out.println("-------------拓展类加载器------------");
@@ -22,6 +28,45 @@ public class ClassLoaderTest {
         System.out.println("【sun.jar】CurveDB类的加载器的名称:"+ CurveDB.class.getClassLoader());
         System.out.println("【项目类】Test类的加载器的名称:"+ Test.class.getClassLoader().getClass().getName());
         System.out.println("BootsTrapClassLoader 写在JVM中，jdk无此类 ，AppClassLoader和 ExtClassLoader 在 Launcher 中完成初始化，默认加载器是AppClassLoader");
+
+    }
+
+    /**
+     * 自定义加载器
+     */
+    public static class MyClassLoader extends ClassLoader{
+        private final static String fileSuffixExt = ".class";
+        private String loadPath;
+        //指定加载器为父类
+        public MyClassLoader(ClassLoader parent,String path) {
+            super(parent);
+            loadPath = path;
+        }
+        //使用app加载器为父加载器
+        public MyClassLoader(String path) {
+            super();
+            loadPath = path;
+        }
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            //获取class文件的字节数组
+            byte[] resultData = this.loadByteClassData(name);
+            return super.defineClass(name, resultData, 0, resultData.length);
+        }
+        /**
+         * 加载指定路径下面的class文件的字节数组
+         * @param name 二进制文件名称
+         * @return 二进制字节数组
+         */
+        private byte[] loadByteClassData(String name) throws ClassNotFoundException {
+            String content = Stream.getPath(loadPath + name + fileSuffixExt);
+            if (content == null){
+                throw new ClassNotFoundException();
+            }
+            return content.getBytes();
+        }
+
+
     }
 
 }
