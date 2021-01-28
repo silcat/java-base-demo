@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
  */
 public class FactoryPattern {
     public static void main(String[] args) {
-        String showA = new AFactory().getProduct().show();
-        String showB = new BFactory().getProduct().show();
+        String showA = new AFactory().getProduct().show("A");
+        String showB = new BFactory().getProduct().show("B");
     }
 
     /**
@@ -46,18 +46,29 @@ public class FactoryPattern {
      * 产品
      */
     public  abstract  interface Product{
-        String show();
+        String show(String name);
     }
     public static abstract class AbstractProduct implements Product{
         private String name;
     }
     @AllArgsConstructor
-    public static  class AProduct extends AbstractProduct{
+    public static  class AProduct extends AbstractProduct implements Cloneable{
         private String name;
 
         @Override
-        public String show() {
-            return "A";
+        public String show(String name) {
+            this.name = name;
+            return name;
+        }
+        @Override
+        public AProduct clone(){
+            AProduct prototype = null;
+            try{
+                prototype = (AProduct)super.clone();
+            }catch(CloneNotSupportedException e){
+                e.printStackTrace();
+            }
+            return prototype;
         }
     }
     @AllArgsConstructor
@@ -65,8 +76,8 @@ public class FactoryPattern {
         private String name;
 
         @Override
-        public String show() {
-            return "B";
+        public String show(String name) {
+            return name;
         }
     }
 

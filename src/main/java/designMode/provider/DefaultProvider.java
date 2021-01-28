@@ -3,6 +3,9 @@ package designMode.provider;
 
 import static designMode.provider.ProviderManager.DEFAULT_PROVIDER;
 
+/**
+ * 通过静态块注册
+ */
 public class DefaultProvider implements ProviderInterface {
     @Override
     public void doSomethting() {
