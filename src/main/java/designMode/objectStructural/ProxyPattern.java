@@ -1,74 +1,100 @@
 package designMode.objectStructural;
 
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+
 import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
- * 适配器模式
- */
+ * 代理设计模式：为其他对象提供一种代理以控制对这个对象的访问。
+**/
 public class ProxyPattern {
     public static void main(String[] args) throws IOException {
-//        Callable<Long> callable = new Callable<Long>() {
-//            @Override
-//            public Long call() throws Exception {
-//                return null;
-//            }
-//        };
-//        new Thread(new RunnbleAdapter(callable));
+        //静态代理
+        new Proxy(new RealSubject()).buyCar();
+        //动态代理
+        RealSubject realSubject = new RealSubject();
+        Subject proxy = (Subject) new ProxyTwo().bind(realSubject);
+        proxy.buyCar();
+        //cglib动态代理
+        Subject proxyCglib  =(Subject) new ProxyThree().bind(realSubject);
+        proxyCglib.buyCar();
 
-        String speakEnglish = new Adapeter().speakEnglish();
     }
-    //对象适配
-    public static class RunnbleAdapter implements Runnable {
-
-        // 引用待转换接口:
-        private Callable<?> callable;
-
-        public RunnbleAdapter(Callable<?> callable) {
-            this.callable = callable;
-        }
+    /**
+     * 静态代理，需要手动创建代理类
+     */
+    interface Subject {
+        void buyCar();
+    }
+    public static class RealSubject implements Subject {
         @Override
-        public void run() {
-            try {
-                Object call = callable.call();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
+        public void buyCar() {
+            System.out.println("用户买车");
         }
     }
+    public static class Proxy implements Subject {
+        private Subject targe;
 
-    //类适配
-    public static class Targe {
-        public  String speakLanguage(){
-            return "中文";
-        }
-    }
-    public interface AdapeterLanguage {
-        String speakEnglish();
-        String speakJanpanese();
-    }
-    public static class DafautAdapeter extends Targe implements AdapeterLanguage {
-
-        @Override
-        public String speakEnglish() {
-            return "";
+        public Proxy(Subject subject ) {
+            targe = subject;
         }
 
         @Override
-        public String speakJanpanese() {
-            super.speakLanguage();
-            return "";
+        public void buyCar() {
+            System.out.println("余额校验");
+            targe.buyCar();
+            System.out.println("记录日志");
         }
     }
-    public static class Adapeter extends DafautAdapeter  {
+    /**
+     * 动态代理:被代理对象必须有接口
+     */
+    public static class ProxyTwo implements InvocationHandler {
+        private Object delegate;
+
+        public Object bind(Object delegate) {
+            this.delegate = delegate;
+            return java.lang.reflect.Proxy.newProxyInstance(
+                    this.delegate.getClass().getClassLoader(), this.delegate.getClass().getInterfaces(), this
+            );
+        }
         @Override
-        public String speakEnglish() {
-            super.speakLanguage();
-            return "english";
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            System.out.println("余额校验");
+            method.invoke(delegate,args);
+            System.out.println("记录日志");
+            return null;
+
         }
     }
-
-
+    /**
+     * cglib代理:代理类被标记成final，无法通过CGLIB去创建动态代理。
+     */
+    public static class ProxyThree  {
+        Object obj;
+        public Object bind(final Object target)
+        {
+            this.obj = target;
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(obj.getClass());
+            enhancer.setCallback(new MethodInterceptor() {
+                                     @Override
+                                     public Object intercept(Object obj, Method method, Object[] args,
+                                                             MethodProxy proxy) throws Throwable
+                                     {
+                                         System.out.println("余额校验");
+                                         Object res = method.invoke(target, args);
+                                         System.out.println("记录日志");
+                                         return res;
+                                     }
+                                 }
+            );
+            return enhancer.create();
+        }
+    }
 }
