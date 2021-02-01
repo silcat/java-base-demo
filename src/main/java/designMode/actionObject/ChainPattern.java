@@ -23,6 +23,8 @@ public class ChainPattern {
     public static  class Request {
         private String name;
         private int amount;
+        //加上receiver就是命令模式，及责任链中复合命令模式
+//        private CommandPattern.Receiver receiver;
     }
     //处理器
     public interface Handler {
