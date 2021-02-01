@@ -1,4 +1,4 @@
-package designMode.objectStructural;
+package designMode.actionObject;
 
 import java.io.IOException;
 
