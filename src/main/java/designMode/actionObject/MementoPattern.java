@@ -18,23 +18,6 @@ public class MementoPattern {
         originator.playGame();
         MementoManager.getInstance().saveState(originator.exitGame());
         originator.restoretMemento( MementoManager.instance.getState(originator.getName()));
-
-
-
-    }
-    public static   abstract class AbstractSetting {
-        public final String getSetting(String key) {
-            String value = lookupCache(key);
-            if (value == null) {
-                System.out.println("数据库查数据");
-                putIntoCache(key, value);
-            }
-            return value;
-        }
-
-        protected abstract String lookupCache(String key);
-
-        protected abstract void putIntoCache(String key, String value);
     }
 
     /**
