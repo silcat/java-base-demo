@@ -4,6 +4,7 @@ package designMode.actionObject;
 /**
  * 命令模式：把命令的调用者与执行者分开，使双方不必关心对方是如何操作的。
  * 如果使用命令模式，就要引入调用者、接收者两个角色，原本放在一处的逻辑分散到了三个类中，设计时，必须考虑这样的代价是否值得。
+ * 通常创建 命令是会 默认 接收者接收者，因为client 按逻辑仅需要知道invoker即可，不会知道接收者
  */
 public class CommandPattern {
     public static void main(String[] args)  {
