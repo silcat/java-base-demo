@@ -10,6 +10,7 @@ import sun.security.ec.CurveDB;
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
+        DefaultProvider defaultProvider = new DefaultProvider();
         ProviderManager.doSomething("designMode.provider.BProvider");
     }
 

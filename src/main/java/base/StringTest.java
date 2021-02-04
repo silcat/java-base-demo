@@ -12,7 +12,7 @@ import java.io.*;
 public class StringTest {
     public static void main(String[] args)  {
 
-
+        bukebian(1L);
     }
 
     /**
