@@ -11,8 +11,14 @@ import java.io.*;
  */
 public class StringTest {
     public static void main(String[] args)  {
+        try {
+            throw new Exception("");
+        }catch (RuntimeException r){
 
-        bukebian(1L);
+        }catch (Throwable ex){
+
+
+        }        bukebian(1L);
     }
 
     /**
