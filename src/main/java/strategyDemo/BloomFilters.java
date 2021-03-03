@@ -40,7 +40,7 @@ public class BloomFilters {
             int index =(int) unionHash % length /64  ;
             //获取对应数组的移位
             Long mod = unionHash % length;
-            if ((data[index] & 1L<< mod) == 0L){
+            if ((data[index] &(int) 1L<< mod) == 0L){
                 data[index] |= 1L<< mod;
                 combinedHash += hash2;
             }
