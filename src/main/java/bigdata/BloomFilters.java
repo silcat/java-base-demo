@@ -1,4 +1,4 @@
-package strategyDemo;
+package bigdata;
 
 import com.alibaba.dts.shade.org.apache.commons.Charsets;
 import com.google.common.hash.Hashing;
