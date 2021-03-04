@@ -1,6 +1,7 @@
 package strategyDemo;
 
 import java.util.Arrays;
+import java.util.PriorityQueue;
 
 public class HeapSortStrategy {
     /**
@@ -45,6 +46,7 @@ public class HeapSortStrategy {
 //            System.out.println("第" + (i + 1) + "轮排序结果：" + Arrays.toString(arr));
 //        }
         for (int i = 0; i < arrayLength - 1; i++) {
+            PriorityQueue<Object> priorityQueue = new PriorityQueue<>();
             //建堆
             buildHeap(arr, arrayLength - 1 - i,b);
             //交换堆顶和最后一个元素
