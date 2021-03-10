@@ -1,7 +1,11 @@
 #java参数传递
 * 参考文档：https://mp.weixin.qq.com/s?__biz=Mzg3NjIxMjA1Ng==&mid=2247488846&idx=3&sn=c0e0a00b756681524e169877b17e0a78&chksm=cf34ef79f843666f6d494f32c7f446a8f509415d316bbffced6712e6394ef00a33ed6f27a2d1&scene=21#wechat_redirect
 * java采用值传递，传递引用类型的数据时，传递的并不是引用本身，依然是值；只是这个值 是内存地址罢了
-
+# 基本数据类型和对象的区别
+* 基本数据类型都是直接存储在内存中的栈上的，数据本身的值就是存储在栈空间里面，而对象的 “引用”(存储对象在内存堆上的地址)是存储在有序的栈上的，而对象本身的值存储在堆上的；
+* 当传递方法参数类型为基本数据类型（数字以及布尔值）时，传递是是值的拷贝，方法体内修改参数不影响原来参数的值
+* 当传递方法参数类型为对象（引用类型）时，传递对象引用地址值的拷贝，方法体内修改对象参数会影响原来的参数
+* 本质java只有值传递，但方便理解可以说基本数据类型是值传递，对象是引用传递（引用地址值的拷贝的传递）
 #浅拷贝与深拷贝
 * https://blog.csdn.net/bbj12345678/article/details/107779107?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.control
 * 深拷贝与浅拷贝问题中，会发生深拷贝的有java中的8中基本类型以及他们的封装类型，另外还有String类型。其余的都是浅拷贝
