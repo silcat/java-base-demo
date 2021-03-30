@@ -127,3 +127,6 @@ maxmemory-samples 5
 * 删除过期key的数据一致性
      * 当一个key过期时DEL操作将被记录在AOF文件并传递到所有相关的slave。也即过期删除操作统一在master实例中进行并向下传递，而不是各salve各自掌控。这样一来便不会出现数据不一致的情形。
      * 当slave连接到master后并不能立即清理已过期的key（需要等待由master传递过来的DEL操作），slave仍需对数据集中的过期状态进行管理维护以便于在slave被提升为master会能像master一样独立的进行过期处理。
+ ## redis优化策略
+ * https://zhuanlan.zhihu.com/p/293042405
+     
