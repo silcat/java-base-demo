@@ -128,7 +128,7 @@ public class NioReactorServer {
                     //step 1 select
                     //select如果不传参数（超时时间）会阻塞，wakeup可以唤醒
                     //System.out.println(Thread.currentThread().getName() + ": before select..." + selector.keys().size());
-                    int nums = selector.select(2);
+                    int nums = selector.select(10000);
                     //Thread.sleep(1000);
                     //System.out.println(Thread.currentThread().getName() + ": after select..." + selector.keys().size());
                     //step 2 处理selectKeys
