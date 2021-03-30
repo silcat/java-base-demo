@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NioReactorServer {
-    private static final int PORT = 9898;
+    private static final int PORT = 9001;
     public static void main(String[] args)
     {
         SelectorThreadGroup boss = new BossSelectorThreadGroup(1);
@@ -48,6 +48,7 @@ public class NioReactorServer {
             SelectorThread selectorThread = next(channel);
             selectorThread.taskQueue.add(channel);
             return selectorThread;
+
         }
 
         /**
@@ -65,7 +66,7 @@ public class NioReactorServer {
 
             }
             int index = selectIndex.incrementAndGet() % (selectors.length-1);
-            return selectors[index + 1];
+            return selectors[index];
         }
     }
     @Data
@@ -78,15 +79,16 @@ public class NioReactorServer {
         public void bind(int port, SelectorThreadGroup work) {
             try {
                 server = ServerSocketChannel.open();
-                //有server之后，要立刻设置非阻塞
-                server.configureBlocking(false);
+
                 //server准备好后，要绑定到指定端口上
-                server.bind(new InetSocketAddress(port));
+                server.socket().bind(new InetSocketAddress("127.0.0.1",port));
+                server.configureBlocking(false);
                 workGroup = work;
                 //server要注册到哪个selector上？
                 //这个时候我们定义一个干活的，专门选出将server注册到哪个selector
-                SelectorThread selector = nextSelector(server);
-                server.register(selector.selector, SelectionKey.OP_ACCEPT);
+                SelectorThread selectorThread = nextSelector(server);
+                server.register(selectorThread.selector,SelectionKey.OP_ACCEPT);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,7 +128,7 @@ public class NioReactorServer {
                     //step 1 select
                     //select如果不传参数（超时时间）会阻塞，wakeup可以唤醒
                     //System.out.println(Thread.currentThread().getName() + ": before select..." + selector.keys().size());
-                    int nums = selector.select(1);
+                    int nums = selector.select(2);
                     //Thread.sleep(1000);
                     //System.out.println(Thread.currentThread().getName() + ": after select..." + selector.keys().size());
                     //step 2 处理selectKeys
@@ -196,6 +198,7 @@ public class NioReactorServer {
                         //将读到的内容翻转，然后直接写出
                         buffer.flip();
                         while (buffer.hasRemaining()) {
+                            System.out.print((char)buffer.get());
                             clientChannel.write(buffer);
                         }
                         //全写完之后，清一下buffer
@@ -229,8 +232,8 @@ public class NioReactorServer {
                 //设置成非阻塞
                 client.configureBlocking(false);
                 //选择一个多路复用器selector，并且注册
-                SelectorThread selectorThread = ((BossSelectorThreadGroup) group).getWorkGroup().nextSelector(client);
-                client.register(selectorThread.selector,SelectionKey.OP_READ);
+               ((BossSelectorThreadGroup) group).getWorkGroup().nextSelector(client);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

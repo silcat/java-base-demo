@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class NioClient {
     public static void main(String[] args) throws IOException {
         //1. 获取通道
-        SocketChannel sChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9898));
+        SocketChannel sChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9001));
 
         //2. 切换非阻塞模式
         sChannel.configureBlocking(false);
