@@ -125,15 +125,9 @@ public class NioReactorServer {
             //setp 3 runAllTasks
             while (true) {
                 try {
-                    //step 1 select
-                    //select如果不传参数（超时时间）会阻塞，wakeup可以唤醒
-                    //System.out.println(Thread.currentThread().getName() + ": before select..." + selector.keys().size());
+
                     int nums = selector.select(10000);
-                    //Thread.sleep(1000);
-                    //System.out.println(Thread.currentThread().getName() + ": after select..." + selector.keys().size());
-                    //step 2 处理selectKeys
-                    //判断有没有事件
-                    //System.out.println("select()返回：" + nums);
+
                     if (nums > 0) {
                         Set<SelectionKey> keys = selector.selectedKeys();
                         //逐一线性处理
@@ -159,21 +153,9 @@ public class NioReactorServer {
                     //step 3 处理一些task
                     //这个队列：是堆里的对象，线程的栈是独立的，堆是共享的
                     if (!taskQueue.isEmpty()) {
-                        Channel c = taskQueue.take();
-                        if (c instanceof ServerSocketChannel) {
-                            ServerSocketChannel server = (ServerSocketChannel) c;
-                            server.register(selector, SelectionKey.OP_ACCEPT);
-                            //打印一下哪个线程持有了监听的fd
-                            System.out.println(Thread.currentThread().getName() + " 注册监听 register listen");
-                        } else if (c instanceof SocketChannel) {
-                            SocketChannel client = (SocketChannel) c;
-                            ByteBuffer buffer = ByteBuffer.allocateDirect(4096);
-                            client.register(selector, SelectionKey.OP_READ, buffer);
-                            //打印一下哪个线程接受了哪个客户端
-                            System.out.println(Thread.currentThread().getName() + " 注册监听 register client " + client.getRemoteAddress());
-                        }
+                        //略
                     }
-                } catch (IOException | InterruptedException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -181,24 +163,21 @@ public class NioReactorServer {
 
         private void readHandler(SelectionKey key) {
             System.out.println(Thread.currentThread().getName() + " 进入readHandler...");
-            //从key那里拿到一个buffer
-            //给key附加一个buffer
-            ByteBuffer buffer = (ByteBuffer) key.attachment();
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
             //得到客户端channel
             SocketChannel clientChannel = (SocketChannel) key.channel();
-            //开始读取
-            //先清理一下buffer
-            buffer.clear();
             //先处理简单的：客户端发什么，服务端就返回什么
             while (true) {
                 try {
+                    //read非阻塞，若内核缓冲区无数据立即返回
                     int num = clientChannel.read(buffer);
                     //如果读到内容了
                     if (num > 0) {
                         //将读到的内容翻转，然后直接写出
+                        String msg = new String(buffer.array());
+                        System.out.println(msg + " from " + clientChannel.hashCode());
                         buffer.flip();
                         while (buffer.hasRemaining()) {
-                            System.out.print((char)buffer.get());
                             clientChannel.write(buffer);
                         }
                         //全写完之后，清一下buffer
@@ -232,7 +211,8 @@ public class NioReactorServer {
                 //设置成非阻塞
                 client.configureBlocking(false);
                 //选择一个多路复用器selector，并且注册
-               ((BossSelectorThreadGroup) group).getWorkGroup().nextSelector(client);
+                SelectorThread selectorThread = ((BossSelectorThreadGroup) group).getWorkGroup().nextSelector(client);
+                client.register(selectorThread.selector,SelectionKey.OP_READ);
 
             } catch (IOException e) {
                 e.printStackTrace();
