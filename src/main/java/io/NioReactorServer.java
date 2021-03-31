@@ -178,6 +178,7 @@ public class NioReactorServer {
                         System.out.println(msg + " from " + clientChannel.hashCode());
                         buffer.flip();
                         while (buffer.hasRemaining()) {
+
                             clientChannel.write(buffer);
                         }
                         //全写完之后，清一下buffer
