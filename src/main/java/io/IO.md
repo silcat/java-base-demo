@@ -47,3 +47,8 @@
 ## Reactor思想
 * Reactor模式：由一个不断等待和循环的单独进程（线程）处理IO就绪这个事件（select，epoll），它接受所有handler的注册，在就绪后就调用分发指定handler进行处理，这个角色的名字就叫做Reactor   
 * ![img](https://ask.qcloudimg.com/http-save/yehe-1757319/hyn7xqm953.jpeg?imageView2/2/w/1620)
+##java NIO
+* https://mp.weixin.qq.com/s/AXXMyteVBQ6Tll8Psx4msg
+* channel ,buffer,selector
+##netty
+* 基于java nio ，通过reactor模式高性能通讯框架

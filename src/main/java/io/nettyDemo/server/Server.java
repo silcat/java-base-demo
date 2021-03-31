@@ -1,13 +1,14 @@
-package nettyDemo.server;
+package io.nettyDemo.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import nettyDemo.handler.ServerHandler;
+import io.nettyDemo.handler.ServerHandler;
 
 import java.net.InetSocketAddress;
 
@@ -21,6 +22,8 @@ public class Server {
     public void start() throws InterruptedException {
         final ServerHandler serverHandler = new ServerHandler();
         EventLoopGroup group = new NioEventLoopGroup();
+        //linix 2.6支持epoll
+//        EpollEventLoopGroup epollEventLoopGroup = new EpollEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(group)
