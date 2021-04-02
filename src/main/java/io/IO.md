@@ -50,7 +50,3 @@
 ##java NIO
 * https://mp.weixin.qq.com/s/AXXMyteVBQ6Tll8Psx4msg
 * channel ,buffer,selector
-##netty
-* 基于java nio ，通过reactor模式高性能通讯框架
-* http://note.jues.org.cn/node/100
-* https://segmentfault.com/a/1190000014938586?utm_source=sf-similar-article
