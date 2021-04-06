@@ -4,6 +4,32 @@
 * https://mp.weixin.qq.com/s/Ru7QrCFPFSLUB4FNxZo8zQ?st=520E6F3AE0EDF7739AF0BCDBDF0CCDE9361717E7A5FDCD6A7340CC0ADFD78AE6FE58BEA5204A7E7F879E90EEDCB5E2049B6A11A2332B92D0852AFEA1C271A416AE2A470DF1E5AD94FAA5086FBBD71D45142E5AA395581F821DBA79CCE6AED873C1239185ED395591780D573449DE9B3AE21CCACB558F77DF4DE783586D00A9F39085CF92A366912A7CA60F34063CCF7F74E451321B99954F2C2026206F51D7635C5EDF5EE18A1C0603D6CC53B9F78408&vid=1688852945251408&cst=69B9FA90F17C98445B009F0BF5E93E37A2A076F130E3AC3CD2989A53847F3FBD84D326D747690D7DABD9B9D2BB01F5CF&deviceid=613fb980-925a-4260-9024-2a14c5f1bc83&version=3.1.2.2211&platform=win
 # 网络编程概念
 ##网路协议
+* 数据在网络中是以字节（二进制）的形式传输的，要让通信的双方都能正确的接收对方发送的信息，一定要定义好数据格式，要让对方知道如何解析，从哪一位开始到哪一位代表什么含义，数据的总长度是多少，以避免多读或少读发生解析错误和粘包等问题。
+* 序列化工具：将对象序列化为字节传输及反序列化
+    * fastjson
+    * protobuf
+    * protostuff
+    * kryo
+* 自定义协议
+    * https://blog.csdn.net/mz4138/article/details/109277563
+    * magicCode:magicCode一般是指硬写到代码里的整数常量，数值是编程者自己指定的,表示包头的起始点
+    * ProtocolVer:版本号
+    * Full length：总长度
+    * MsgType：消息类型
+    * Serializer：序列化方式，参考序列化工具
+    * Compress：是否压缩
+    * RequestId：请求唯一编号
+    * body：请求内容  
+    ````
+    0     1     2     3     4     5     6     7     8     9    10     11    12    13    14   
+    +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+    |   magic   |Proto |     Full length      | Msg |Seria|Compr|     RequestId         |
+    |   code    |colVer|    (head+body)       |Type |lizer|ess  |                       |   header
+    +-----------+-----------+-----------+-----------+-----------+-----------+-----------+                                                                                             |
+    |                                        body                                       |
+    |
+    +-----------------------------------------------------------------------------------------------+
+    ````
 ## 拆包与粘包
 # netty基本概念及流程
 * EventLoop：绑定了selector，channel的IO线程
@@ -86,3 +112,4 @@
             * LengthFieldPrepender
         * ChannelOutboundHandlerAdapter
 # 实现简易的RPC框架
+* https://blog.csdn.net/dawei0523/article/details/84742090

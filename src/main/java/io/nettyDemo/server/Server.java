@@ -8,6 +8,7 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.nettyDemo.handler.Decode;
 import io.nettyDemo.handler.ServerHandler;
 
 import java.net.InetSocketAddress;
@@ -32,6 +33,7 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) {
+                            ch.pipeline().addLast(serverHandler);
                             ch.pipeline().addLast(serverHandler);
                         }
                     });
