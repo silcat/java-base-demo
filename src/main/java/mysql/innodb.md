@@ -9,14 +9,16 @@
 * Page clear thread：脏页的刷新操作，从master thread分离出来
 ##内存池
 * https://cs704.cn/?p=352
+* https://mp.weixin.qq.com/s?__biz=MzI5MDg4ODEzOA==&mid=2247483905&idx=1&sn=ecabed40aa39b065f1d54149a85ab998&chksm=ec1842a4db6fcbb296f1dc3990607621e7f44d33591ae5b6857a8ccd0ee75db93c6d18017516&scene=21#wechat_redirect
 * 缓冲池
     * 由于数据存放在磁盘，缓冲池简单来说就是一块内存区域，缓存从磁盘按页读取的数据，若未命中则重磁盘读取（速度慢）
+    * 每个Buffer Pool各自负责管理一部分缓存页，并且有自己独立的LRU、Free、Flush链表。
     * 缓存池缓存的数据页类型有：索引页，数据页，undo页，insertByffer等
         * 其中索引页用B+Tree数据结构
             * https://mp.weixin.qq.com/s/IfiYbWd-YLxO2TvLB8_jcQ?st=&vid=1688852945251408&cst=6C7F761707808A9C9DBB55809CDFE8FC96E42038BBE00C6D343544828825D9FC2A01DF7D99BE6603C97E6B446CF9E610&deviceid=613fb980-925a-4260-9024-2a14c5f1bc83&version=3.1.2.2211&platform=win
             * https://blog.csdn.net/qq_33171970/article/details/88395278?utm_medium=distribute.wap_relevant.none-task-blog-searchFromBaidu-10.wap_blog_relevant_pic&dist_request_id=1328769.69063.16176761626891379&depth_1-utm_source=distribute.wap_relevant.none-task-blog-searchFromBaidu-10.wap_blog_relevant_pic
     ![img](https://cdn.nlark.com/yuque/0/2019/png/467414/1571583713156-7b4304d4-45c2-40ae-9efc-8b6f22b8a1c1.png)
-* 索引页与数据页
+* LRU List,Flush List
      * 缓冲池的内存是根据LRU进行管理的，当缓冲池不能存放新读取页信息则首先释放队尾元素
       * 新读取的页不是插入LRU列表头，而是插入到尾端37%的位置，防止热点数据被刷出
       * LRU列表中的页被修改后变为dirty page，此时缓冲池中的页和磁盘不一致，通过checkpoint刷回磁盘，其中Flush list即为dirty page列表。
@@ -59,9 +61,17 @@
             * 索引非唯一。（唯一索引需要从查找索引页中的唯一性，可能导致离散读取）        
 * innodb_additonal_mem_pool_size
    * 如果申请了很大的buffer pool，此参数应该相应增加，存储了LRU、锁等信息。            
-##InnoDB关键特性
-* double write.
-* adaptive hash index.
-* Async IO.
-* Flush neighbor page.
+##索引
+
+* https://blog.csdn.net/mu_wind/article/details/110128016
+
+* 聚簇索引：
+````
+            （key: 2;point: 002）
+
+
+````
+* 辅助索引
+* 联合索引
+* 覆盖索引
 
