@@ -1,6 +1,7 @@
 # 参考文档
 * https://www.cnblogs.com/mikevictor07/p/12013507.html
 * https://www.cnblogs.com/reecelin/p/13504084.html
+* https://juejin.cn/book/6844733769996304392/section/6844733770063429646
 #InnoDB:
 ##后台进程：
 * Master Thread：核心线程，负责缓冲池的数据异步入盘，包括脏页刷新、合并插入缓冲、undo页回收等。
