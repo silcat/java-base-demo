@@ -1,4 +1,6 @@
+* https://redis.io/topics/persistence
 ##数据结构
+* 源码：http://daoluan.net/redis-source-notes/
 * 查看文档：https://www.cnblogs.com/sgh1023/p/10123767.html
 * String
     * get(key) 获取值

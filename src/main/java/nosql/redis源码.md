@@ -1,5 +1,6 @@
 ##数据结构
 * https://redisbook.readthedocs.io/en/latest/compress-datastruct/intset.html#id2
+* http://daoluan.net/redis-source-notes/
 * sds
     * 数据结构
     ````
