@@ -17,7 +17,7 @@ public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean
     private String beanName;
 
     public Person() {
-        System.out.println("【构造器】实例化");
+        System.out.println("Person：【构造器】实例化");
     }
 
     public String getName() {

@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.codec.DecoderException;
@@ -8,42 +9,26 @@ import lombok.NoArgsConstructor;
 import org.apache.curator.shaded.com.google.common.base.Charsets;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 import static javax.xml.bind.DatatypeConverter.printLong;
 
 public class test {
 
     public static void main(String[] args)  {
-
-//
-//        s = 33;
-//        System.out.println(s);
-//        System.out.println(integer);
-//        long workerId= 32L;
-//        long time = System.currentTimeMillis()-1483200000000L << 23;
-//        long sequence  = 1024L ;
-//        long l = time | workerId | sequence;
-////        print(RUNNING);
-////        print(CAPACITY);
-////        print(0 << 29);
-////        print(1 << 29);
-////        print(2 << 29);
-////        print(3 << 29);
-//
-//
-////        print(RUNNING&CAPACITY);
-////        print(c+1);
-//        printLong(l );
-//        printLong(~(-1L << 12)&4096);
-////        print(c+1 & ~CAPACITY);
-////        print((c+1)&CAPACITY);
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.directBuffer();
-        writeStr(buf ,"aaa");
-        writeStr(buf ,"bb");
-        writeStr(buf, JSON.toJSONString(new Object()));
-        System.out.println(readStr(buf));
-        System.out.println(readStr(buf));
-        System.out.println(readStr(buf));
+        List<Integer> warningIndexs = Lists.newArrayList(1,2,3,4);
+        if (warningIndexs.size() > 0){
+            StringBuilder builder = new StringBuilder();
+            for (int indexs= 0;indexs<warningIndexs.size();indexs++){
+                if (indexs <3){
+                    builder.append("tst");
+                    if (indexs < 2){
+                        builder.append(",");
+                    }
+                }
+            }
+            String string = builder.toString();
+        }
 
     }
     private static void writeStr(ByteBuf buf, String s) {

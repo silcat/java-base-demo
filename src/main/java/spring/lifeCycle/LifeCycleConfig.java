@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(value = {"spring.lifeCycle"})
+@ComponentScan(value = {"spring"})
 public class LifeCycleConfig {
     @Bean
     public Person person(){
