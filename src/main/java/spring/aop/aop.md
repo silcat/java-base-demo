@@ -63,3 +63,5 @@ public class BookServiceProxy2 {}
 ````
 ##spring aop实现
 * https://blog.csdn.net/litianxiang_kaola/article/details/85335700
+https://blog.csdn.net/f641385712/article/details/88925478
+https://www.cnblogs.com/dennyzhangdd/p/9602673.html
