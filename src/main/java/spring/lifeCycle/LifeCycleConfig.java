@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import spring.aop.Aop;
 import spring.aop.AutoCreaterAopProxyBeanPostProcessor;
+import spring.aop.责任链.ChainInvoction;
 
 @Configuration
 public class LifeCycleConfig {
@@ -13,6 +14,10 @@ public class LifeCycleConfig {
     @Bean
     public Aop aop(){
         return new Aop();
+    }
+    @Bean
+    public ChainInvoction chainInvoction(){
+        return new ChainInvoction();
     }
     @Bean
     public BeanPostProcessor autoCreaterAopProxyBeanPostProcessor(){

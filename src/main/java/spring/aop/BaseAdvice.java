@@ -22,7 +22,10 @@ public class BaseAdvice implements MethodInterceptor {
        return methodProxy.invokeSuper(o,objects);
 
     }
-    private void before(){
+    public void before(){
         System.out.println("BaseAdvice :前置拦截" );
+    }
+    public void afer(){
+        System.out.println("BaseAdvice :后置拦截" );
     }
 }
