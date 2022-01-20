@@ -1,0 +1,14 @@
+@startuml
+mapper->mapper:update();
+config->config:getMapper()
+config->config:mapperProxy
+mapperProxy->mapperProxy:update();
+mapperProxy->MapperMethod:excute();
+mapperProxy->SqlSession:update();
+SqlSession->Executor:doUpdate(MappedStatement);
+Executor->DataSource:getConnect();
+Connect->Connect:createStatement();
+Executor->StatementHandler:update(statement);
+StatementHandler->Statement:execute(sql);
+mapper->mapper:返回结果;
+@enduml
