@@ -19,13 +19,8 @@ public class test {
         List<Integer> warningIndexs = Lists.newArrayList(1,2,3,4);
         if (warningIndexs.size() > 0){
             StringBuilder builder = new StringBuilder();
-            for (int indexs= 0;indexs<warningIndexs.size();indexs++){
-                if (indexs <3){
+            for (int indexs= 0;indexs>-1;indexs++){
                     builder.append("tst");
-                    if (indexs < 2){
-                        builder.append(",");
-                    }
-                }
             }
             String string = builder.toString();
         }

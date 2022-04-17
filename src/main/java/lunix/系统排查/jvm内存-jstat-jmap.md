@@ -2,7 +2,7 @@
 * 格式: jstat option 
   * option：
   ````
-    -class 类加载统计
+    -class 类加载统计是
     -gc 垃圾回收统计
     -gcutil 总结垃圾回收统计
   ````
