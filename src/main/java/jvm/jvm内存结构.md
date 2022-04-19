@@ -1,3 +1,5 @@
+* https://blog.51cto.com/phyger/5201337
+* https://mp.weixin.qq.com/s/uL_cDTbSmUfbIvABzP9fpA
 #程序计数器
 - 线程私有，生命周期与线程相同。
 - 作用：**程序所执行的字节码的 行号指示器
@@ -15,6 +17,7 @@
 #Java堆
 - 所有线程共享的一块内存区域，
 - 存放数据：所有的对象实例以及数组
+- 栈上分配：JVM通过逃逸分析确定该对象不会被外部访问。如果不会逃逸可以将该对象在栈上分配内存，这样该对象所占用的内存空间就可以随栈帧出栈而销毁，就减轻了垃圾回收的压力
 - gc主要对象java堆
 - 默认垃圾回收器：（年轻代与老年代）：1.8（Parallel）。1.9(G1)
   - 调优参数:
@@ -58,113 +61,45 @@
 第四如果老年代可用内存大于历次新生代GC后进入老年代的对象平均大小，但是老年代已经使用的内存空间超过了这个参数指定的比例，也会自动触发Full GC。默认92%
 第五：如果fullgc后内存还是不够分配则会报oom。
 ````
-#JVM参数
-##通用参数
-###堆
-````
--Xms128M	物理内存的1/64(<1GB)	设置java程序启动时堆内存128M。默认(MinHeapFreeRatio参数可以调整)空余堆内存小于40%时，JVM就会增大堆直到-Xmx的最大限制。	生产环境 -Xms 与 -Xmx 最好一样，避免抖动
--Xmx256M	物理内存的1/4(<1GB)	设置最大堆内存256M。默认(MaxHeapFreeRatio参数可以调整)空余堆内存大于70%时，JVM会减少堆直到 -Xms的最小限制，
-一般这两个值会设置成一致的，避免在GC完之后动态的调整堆大小，调整内存会消耗系统资源，对应用会有影响
--Xss1M	1024K(1.8+)	设置线程栈的大小 1M（默认1M）
--XX:MinHeapFreeRatio=40	　	设置堆空间最小空闲比例（默认40）（当-Xmx与-Xms相等时，该配置无效）
--XX:ThreadStackSize	　	-Xss 设置在后面，以-Xss为准；  -XX:ThreadStackSize设置在后面，主线程以 -Xss为准，其他线程以  -XX:ThreadStackSize为准
--XX:MinHeapFreeRatio=40	　	设置堆空间最小空闲比例（默认40）（当-Xmx与-Xms相等时，该配置无效）
--XX:MaxHeapFreeRatio=70	　	设置堆空间最大空闲比例（默认70）（当-Xmx与-Xms相等时，该配置无效）
--XX:+UseCompressedOops	　	使用压缩指针，32G内存下默认开启。开启指针压缩，则Object Head 里的Klass Pointer为4字节，复杂属性的引用指针为4字节，数组的长度用4字节表示，这样能够节省部分内存空间
-````
-###垃圾回收器
-````
--XX:MaxGCPauseMillis	200ms	设置最大垃圾收集停顿时间，G1会尽量达到此期望值，如果GC时间超长，那么会逐渐减少GC时回收的区域，以此来靠近此阈值。
--XX:+UseAdaptiveSizePolicy	　	打开自适应GC策略（该摸式下，各项参数都会被自动调整）
--XX:+UseSerialGC	　	在年轻代和年老代使用串行回收器
--XX:+UseParallelGC	　	使用并行垃圾回收收集器，默认会同时启用 -XX:+UseParallelOldGC（默认使用该回收器）。
--XX:+UseParallelOldGC	　	开启老年代使用并行垃圾收集器，默认会同时启用 -XX:+UseParallelGC
--XX:ParallelGCThreads=4	　	设置用于垃圾回收的线程数为4（默认与CPU数量相同）
--XX:+UseConcMarkSweepGC	　	使用CMS收集器（年老代）
--XX:CMSInitiatingOccupancyFraction=80	　	设置CMS收集器在年老代空间被使用多少后触发
--XX:+CMSClassUnloadingEnabled	　	允许对类元数据进行回收。相对于并行收集器，CMS收集器默认不会对永久代进行垃圾回收。如果希望对永久代进行垃圾回收，可通过此参数设置。
--XX:+UseCMSInitiatingOccupancyOnly	　	只在达到阈值的时候，才进行CMS回收
--XX:+CMSIncrementalMode	　	设置为增量模式。适用于单 CPU 情况。该标志将开启CMS收集器的增量模式。增量模式经常暂停CMS过程，以便对应用程序线程作出完全的让步。因此，收集器将花更长的时间完成整个收集周期。因此，只有通过测试后发现正常CMS周期对应用程序线程干扰太大时，才应该使用增量模式。由于现代服务器有足够的处理器来适应并发的垃圾收集，所以这种情况发生得很少。
--XX:+UseG1GC	　	使用G1回收器
--XX:G1HeapRegionSize=16m	　	使用G1收集器时设置每个Region的大小（范围1M - 32M）
--XX:MaxGCPauseMillis=500	　	设置最大暂停时间，单位毫秒。可以减少 STW 时间。
--XX:+DisableExplicitGC	　	禁止显示GC的调用（即禁止开发者的 System.gc();）
--XX:GCTimeRatio=n	G1为9，CMS为99。	设置垃圾回收时间占程序运行时间的百分比。公式为 1/(1+n)并发收集器设置。G1为9，CMS为99。GC时间占总时间的比例，默认值为99，即允许1%的GC时间。仅仅在Parallel Scavenge收集时有效，公式为1/(1+n)。
--XX:CMSFullGCsBeforeCompaction=n	　	由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次 GC 以后对内存空间进行压缩、整理。
--XX:+UseCMSCompactAtFullCollection	　	打开对年老代的压缩。可能会影响性能，但是可以消除碎片。
--XX:+CMSParallelRemarkEnabled	　	是否启用并行标记（仅限于ParNewGC）。开启 -XX:+CMSParallelRemarkEnabled
-关闭 -XX:-CMSParallelRemarkEnabled
-````
-###堆快照
-````
--XX:+PrintGCDetails	　	打印GC信息
--XX:+PrintGCTimeStamps	　	打印每次GC的时间戳（现在距离启动的时间长度）
--XX:+PrintGCDateStamps	　	打印GC日期
--XX:+PrintHeapAtGC	　	每次GC时，打印堆信息
--Xloggc:/usr/local/tomcat/logs/gc.$$.log	　	GC日志存放的位置
-````
-###日志
-````
--XX:+UseGCLogFileRotation	　	开启滚动日志记录
--XX:NumberOfGCLogFiles=5	　	滚动数量，命名为filename.0, filename.1 ..... filename.n-1, 然后再从filename.0 开始，并覆盖已经存在的文件
--XX:GCLogFileSize=100k	　	每个文件大小，当达到该指定大小时，会写入下一个文件。GC文件滚动大小，需配置UseGCLogFileRotation，设置为0表示仅通过jcmd命令触发
--Xloggc:/gc/log	　	日志文件位置
--XX:+PrintTenuringDistribution	　	打印存活实例年龄信息
--XX:+PrintHeapAtGC	　	GC前后打印堆区使用信息
--XX:+PrintGCApplicationStoppedTime	　	打印GC时应用暂停时间
-调优参数
--XX:+PrintFlagsFinal	　	输出所有XX参数和值
--XX:+PrintCommandLineFlags	　	输出JVM设置过的详细的XX参数的名称和值
--XX:+HeapDumpOnOutOfMemoryError	　	抛出内存溢出错误时导出堆信息到指定文件
--XX:HeapDumpPath=/path/heap/dump/gc.hprof	　	当HeapDumpOnOutOfMemoryError开启的时候，dump文件的保存路径，默认为工作目录下的java_pid<pid>.hprof文件
-XX:MaxDirectMemorySize	-Xmx	直接内存大小，直接内存非常重要，很多IO处理都需要直接内存参与，直接内存不被jvm管理，所以就不存在GC时内存地址的移动问题，直接内存会作为堆内存和内核之间的中转站。
-````
-##堆
-###新生代
-````
--Xmn10M	　	设置新生代区域大小为10M	如果以上三个同时设置了，谁在后面谁生效。生产环境使用-Xmn即可，避免抖动
--XX:NewSize=2M	　	设置新生代初始大小为2M
--XX:MaxNewSize=2M	　	设置新生代最大值为2M
--XX:NewRatio=2	2	新生代:老年代 = 1:2，默认值为2。使用G1时一般此参数不设置，由G1来动态的调整，逐渐调整至最优值。
--XX:SurvivorRatio=8	8	设置年轻代中eden区与survivor区的比例为8，即：eden:from:to = 8:1:1
--XX:TargetSurvivorRatio=50	　	设置survivor区使用率。当survivor区达到50%时，将对象送入老年代
--XX:+UseTLAB	　	在年轻代空间中使用本地线程分配缓冲区(TLAB)，默认开启。Thread Local Allocation Buffer，此区域位于Eden区。当多线程分配内存区块时，因为内存分配和初始化数据是不同的步骤，所以在分配时需要对内存区块上锁，由此会引发区块锁竞争问题。此参数会让线程预先分配一块属于自己的空间(64K-1M)，分配时先在自己的空间上分配，不足时再申请，这样能就不存在内存区块锁的竞争，提高分配效率。
--XX:TLABSize=512k	　	设置TLAB大小为512k
--XX:MaxTenuringThreshold=15	15	设置垃圾对象最大年龄，对象进入老年代的年龄（Parallel是15，CMS是6）。如果设置为 0 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。
--XX:+UseTLAB	　	使用线程本地分配缓冲区。Server模式默认开启。Thread Local Allocation Buffer，此区域位于Eden区。当多线程分配内存区块时，因为内存分配和初始化数据是不同的步骤，所以在分配时需要对内存区块上锁，由此会引发区块锁竞争问题。此参数会让线程预先分配一块属于自己的空间(64K-1M)，分配时先在自己的空间上分配，不足时再申请，这样能就不存在内存区块锁的竞争，提高分配效率。
--XX:InitiatingHeap OccupancyPercent	45	启动并发GC时的堆内存占用百分比。G1用它来触发并发GC周期,基于整个堆的使用率,而不只是某一代内存的使用比例。值为 0 则表示“一直执行GC循环)’. 默认值为 45 (例如, 全部的 45% 或者使用了45%)。
-````
-###老年代
-````
--XX:PretenureSizeThreshold	Region的一半	大对象晋升老年代阈值。
--XX:+HandlePromotionFailure	DK1.6之后，默认开启	老年代是否允许分配担保失败，，即老年代的剩余最大连续空间不足以引用新生代的整个Eden和Survivor区的所有存活对象的极端情况（以此判断是否需要对老年代进行以此FullGC）。
-````
-###永久代(1.7之前)
--XX:MaxPermSize=n	　	设置永久代大小
-###元空间
-````
+## 元空间
+- 元数据区也是一块线程共享的内存区域，方法区在元数据区，
+- 保存被虚拟机加载的类信息、常量、静态变量以及即时编译器编译后的代码等数据
+- 元空间存在于本地内存，意味着只要本地内存足够，它不会出现像永久代中“java.lang.OutOfMemoryError: PermGen space”这种错误。看上图中的方法区，是不是“膨胀”了。默认情况下元空间是可以无限使用本地内存的，但为了不让它如此膨胀，JVM同样提供了参数来限制它使用的使用。
+- 类型信息、字段、方法、常量保存在本地内存的元空间中，但字符串常量池、静态变量保存在堆中。
+```
 -XX:MetaspaceSize=64M	　	设置元数据空间初始大小（取代-XX:PermSize）
 -XX:MaxMetaspaceSize=128M	　	设置元数据空间最大值（取代之前-XX:MaxPermSize）
 ````
-##其它
--XX:CompileThreshold	1000	JIT预编译阈值。通过JIT编译器，将方法编译成机器码的触发阀值，可以理解为调用方法的次数，例如调1000次，将方法编译为机器码
--XX:+CITime	　	打印启动时花费在JIT Compiler 时间
--XX:+UseThreadPriorities	　	是否开启线程优先级。默认开启。java 中的线程优先级的范围是1～10，默认的优先级是5。“高优先级线程”会优先于“低优先级线程”执行，也就是竞争CPU时间片时，高优先级线程会被优待。
--XX:+UseSpinning	　	是否使用适应自旋锁，1.6+默认开启。这是对synchronized的优化，当运行到synchronized的代码块时，会尝试自旋，如果在自旋期间获取到了锁，那么下次会逐渐的增加自旋时间，反之则减少自旋时间，当自旋时间减少到一定程度后，会关闭自旋机制一段时间，使用重量级锁。
--XX:PreBlockSpin	10	初始自旋次数，使用自旋锁时初始自旋次数，在此基础上上下浮动，生效前提开UseSpinning。
--XX:RelaxAccessControlCheck	默认关闭	放开通过放射获取方法和属性时的许可校验，在Class校验器中，放松对访问控制的检查,作用与reflection里的setAccessible类似。
-##最佳实践
-###G1垃圾回收器
+###为什么取消永久代
 ````
--XX:+PrintAdaptiveSizePolicy 自适应策略，调节Young Old Size，一般G1不会设置新生代和老年代大小，而有G1根据停顿时间逐渐调整新生代和老年代的空间比例
--XX:G1ReservePercent	10	G1为分配担保预留的空间比例，预留10%的内存空间，应对新生代的分配担保情形。
--XX:G1HeapRegionSize	(Xms + Xmx ) /2 / 2048 , 不大于32M，不小于1M，且为2的指数	G1将堆内存默认均分为2048块，1M<region<32 M，当应用频繁分配大对象时，可以考虑调整这个阈值，因为G1的Humongous区域只能存放一个大对象，适当调整Region大小，尽量让其刚好超过大对象的两倍大小，这样就能充分利用Region的空间
--XX:G1ReservePercent	　	G1为分配担保预留的空间比例，默认值为10.预留10%的内存空间，应对新生代的分配担保情形
--XX:G1HeapWastePercent	0.05	触发Mixed GC的可回收空间百分比，默认值5%。在global concurrent marking结束之后，我们可以知道old gen regions中有多少空间要被回收，在每次YGC之后和再次发生Mixed GC之前，会检查垃圾占比是否达到此参数，只有达到了，下次才会发生Mixed GC
--XX:G1MixedGCLive ThresholdPercent	85%	会被MixGC的Region中存活对象占比。
--XX:G1MixedGCCountTarget	8	一次global concurrent marking之后，最多执行Mixed GC的次数
--XX:G1NewSizePercent	5%	新生代占堆的最小比例
--XX:G1MaxNewSizePercent	60%	新生代占堆的最大比例
--XX:GCPauseIntervalMillis	　	指定最短多长可以进行一次gc
--XX:G1OldCSetRegion ThresholdPercent	10%	Mixed GC每次回收Region的数量。一次Mixed GC中能被选入CSet的最多old generation region数量比列
+1.Java7及以前版本的Hotspot中方法区位于永久代中。同时，永久代和堆是相互隔离的，但它们使用的物理内存是连续的。永久代的垃圾收集是和老年代捆绑在一起的，因此无论谁满了，都会触发永久代和老年代的垃圾收集。
+2.Java8中，元空间(Metaspace)登上舞台，方法区存在于元空间(Metaspace)。同时，元空间不再与堆连续，而且是存在于本地内存（Native memory）,避免OOM异常
+````
+###方法区，堆，静态常量池，运行时常量池，字符串常量池，封装类常量池
+- 方法区是规范，元空间和永久代是不同的实现方式
+- 每个class文件被编译后悔形成静态常量池，存放编译生成的字面量和符合引用
+````
+string a = "abc" abc就是字面量，String类名就是符合引用
+````
+- 运行时常量池是静态常量池在jvm运行时的表现形式，他是全局共享，不同类公用一个运行时常量池
+````
+运行时常量池将class文件静态常量池在类解析时将符号引用准换位直接引用（堆内存地址），class文件数据悔加载到运行时常量池
+````
+- 字符串常量池：专门针对String类型设计的常量池，保存在队中，静态变量也保存在队中
+````
+-string的不变性是字符串常量实现的前提，字符串维护常量池提高性能开销，因为string太常用了
+-常量池本身是一个hash表，哈市表固定的bucket是60013且不可以扩容
+-字面量在编译期存放于class文件静态常量池，类加载字面量存放于运行时常量池，在首次使用某个字面量时字面量以真正的对象存放于字符串常量池
+—通过+进行符号引用字符串拼接，相当于用stringbuilder进行append操作，会生成一个新的stringbuilder对象
+````
+- 封装类常量池：java 的基本类型封装类自己实现常量池（不是JVM层面），浮点数没有常量池
+````
+封装类常量池在各内部类实现的，常量池有范围，如整型-128-127寸，char未0-127
+````
+##基本数据类型的值存放在哪里
+````
+-类变量：随着类加载的初始化，把值（a=1中的1）存放在堆中，该类所有对象共用
+类加载分为加载、验证、准备、解析、初始化五个阶段，准备时，在堆中分配内存，解析时，把a对应的符号引用转换成直接引用（堆中的内存地址），初始化时，把值1存到该地址中
+-成员变量：随着对象的创建，也是把值（b=2中的2）存放在堆中，每个对象私有
+-局部变量：运行时，随着方法的入栈，而创建在栈中，随着方法的出栈而消亡
 ````

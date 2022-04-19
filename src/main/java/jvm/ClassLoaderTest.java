@@ -1,5 +1,6 @@
-package base;
+package jvm;
 
+import base.Stream;
 import juc.Test;
 import oracle.jrockit.jfr.events.Bits;
 import sun.security.ec.CurveDB;
