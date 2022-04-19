@@ -143,6 +143,50 @@ XX:GCRatio 直接设置吞吐量的大小。
 -XX:G1HeapWastePercent	0.05	触发Mixed GC的可回收空间百分比，默认值5%。在global concurrent marking结束之后，我们可以知道old gen regions中有多少空间要被回收，在每次YGC之后和再次发生Mixed GC之前，会检查垃圾占比是否达到此参数，只有达到了，下次才会发生Mixed GC
 -XX:InitiatingHeapOccupancyPercent=45 启动并发标记标记百分比，当整堆内存使用量达到百分比时，G1使用它来触发一个基于整个堆的并发标记循环，而不仅仅是一个代。默念值是45
 ````
+- 调优日志
+````
+‐XX:+PrintGCDetails->打印GC日志
+‐XX:+PrintGCTimeStamps->打印GC时间
+‐XX:+PrintGCDateStamps->打印GC日期
+-XX:+PrintAdaptiveSizePolic
+-XX:+PrintGCDetails
+-Xloggc:gc.log 
+````
+###G1日志
+* https://www.cnblogs.com/javaadu/p/11220234.html
+````
+
+22-04-18T05:37:34.116+0800: 0.666: [GC pause (G1 Evacuation Pause) (young) 0.666: [G1Ergonomics (CSet Construction) start choosing CSet, _pending_cards: 256, predicted base time: 7.48 ms, remaining time: 192.52 ms, target pause time: 200.00 ms]
+ 0.666: [G1Ergonomics (CSet Construction) add young regions to CSet, eden: 19 regions, survivors: 2 regions, predicted young region time: 146.02 ms]
+ 0.666: [G1Ergonomics (CSet Construction) finish choosing CSet, eden: 19 regions, survivors: 2 regions, old: 0 regions, predicted pause time: 153.50 ms, target pause time: 200.00 ms]
+, 0.0030407 secs]
+   [Parallel Time: 1.9 ms, GC Workers: 10]
+      [GC Worker Start (ms): Min: 666.4, Avg: 666.5, Max: 666.5, Diff: 0.1]
+      [Ext Root Scanning (ms): Min: 0.0, Avg: 0.2, Max: 1.1, Diff: 1.1, Sum: 1.9]
+      [Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.1, Diff: 0.1, Sum: 0.2]
+         [Processed Buffers: Min: 0, Avg: 0.1, Max: 1, Diff: 1, Sum: 1]
+      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.1, Diff: 0.1, Sum: 0.2]
+      [Object Copy (ms): Min: 0.7, Avg: 1.5, Max: 1.7, Diff: 1.0, Sum: 15.3]
+      [Termination (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.2]
+         [Termination Attempts: Min: 1, Avg: 57.6, Max: 76, Diff: 75, Sum: 576]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1]
+      [GC Worker Total (ms): Min: 1.7, Avg: 1.8, Max: 1.8, Diff: 0.1, Sum: 17.8]
+      [GC Worker End (ms): Min: 668.3, Avg: 668.3, Max: 668.3, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.2 ms]
+   [Other: 1.0 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.8 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.1 ms]
+      [Humongous Register: 0.0 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.0 ms]
+   [Eden: 19.0M(19.0M)->0.0B(73.0M) Survivors: 2048.0K->3072.0K Heap: 21.4M(128.0M)->5357.8K(128.0M)]
+ [Times: user=0.09 sys=0.06, real=0.00 secs] 
+````
 
 
 
