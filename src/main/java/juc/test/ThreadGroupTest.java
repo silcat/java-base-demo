@@ -1,4 +1,4 @@
-package juc;
+package juc.test;
 
 public class ThreadGroupTest {
     public static void main(String[] args) throws InterruptedException {

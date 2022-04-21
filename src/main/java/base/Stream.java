@@ -1,12 +1,15 @@
 package base;
 
 import java.io.*;
+import java.util.HashMap;
 
 public class Stream {
-    public static void main(String[] args)  {
+    public final HashMap map = new HashMap();
+    public  void main(String[] args)  {
         String path = getPath("E:\\java-base-demo\\1.txt");
         String replace = path.replace("a", "a1");
         saveFile("E:\\java-base-demo\\1.txt",replace);
+        map.put("","");
     }
     public static String getPath(String path){
         File file = new File(path);

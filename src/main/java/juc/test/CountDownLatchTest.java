@@ -1,4 +1,4 @@
-package juc;
+package juc.test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

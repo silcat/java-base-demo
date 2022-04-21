@@ -1,4 +1,4 @@
-package juc;
+package juc.test;
 
 import sun.misc.Unsafe;
 
