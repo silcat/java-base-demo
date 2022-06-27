@@ -1,9 +1,9 @@
-package lunix;
+package juc.test;
 
 
 import java.util.concurrent.TimeUnit;
 
-public class ErrorTest {
+public class DeadLockTest {
     public static void main(String[] args)  {
         testDeadBlock();
     }
@@ -77,14 +77,14 @@ public class ErrorTest {
     //Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.181-b13 mixed mode):
     //"t2" #15 prio=5 os_prio=0 tid=0x000000001ff81000 nid=0x1e500 waiting for monitor entry [0x00000000208fe000]
     //   java.lang.Thread.State: BLOCKED (on object monitor)
-    //        at lunix.ErrorTest$MyTask.run(ErrorTest.java:61)
+    //        at juc.test.ErrorTest$MyTask.run(ErrorTest.java:61)
     //        - waiting to lock <0x000000076b400388> (a java.lang.Integer)
     //        - locked <0x000000076b400398> (a java.lang.Integer)
     //        at java.lang.Thread.run(Thread.java:748)
     //
     //"t1" #14 prio=5 os_prio=0 tid=0x000000001f29d000 nid=0x1e504 waiting for monitor entry [0x00000000207ff000]
     //   java.lang.Thread.State: BLOCKED (on object monitor)
-    //        at lunix.ErrorTest$MyTask.run(ErrorTest.java:49)
+    //        at juc.test.ErrorTest$MyTask.run(ErrorTest.java:49)
     //        - waiting to lock <0x000000076b400398> (a java.lang.Integer)
     //        - locked <0x000000076b400388> (a java.lang.Integer)
     //        at java.lang.Thread.run(Thread.java:748)
@@ -104,12 +104,12 @@ public class ErrorTest {
     //Java stack information for the threads listed above:
     //===================================================
     //"t2":
-    //        at lunix.ErrorTest$MyTask.run(ErrorTest.java:61)
+    //        at juc.test.ErrorTest$MyTask.run(ErrorTest.java:61)
     //        - waiting to lock <0x000000076b400388> (a java.lang.Integer)
     //        - locked <0x000000076b400398> (a java.lang.Integer)
     //        at java.lang.Thread.run(Thread.java:748)
     //"t1":
-    //        at lunix.ErrorTest$MyTask.run(ErrorTest.java:49)
+    //        at juc.test.ErrorTest$MyTask.run(ErrorTest.java:49)
     //        - waiting to lock <0x000000076b400398> (a java.lang.Integer)
     //        - locked <0x000000076b400388> (a java.lang.Integer)
     //        at java.lang.Thread.run(Thread.java:748)
