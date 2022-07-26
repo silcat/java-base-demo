@@ -1,6 +1,7 @@
-*https://mp.weixin.qq.com/s/XObrrJJKHOYG66r4hMInqQ
-*https://www.jianshu.com/p/5d0b35affbe0
-*https://www.jianshu.com/p/ec7200a26d8b
+* https://mp.weixin.qq.com/s/XObrrJJKHOYG66r4hMInqQ
+* https://www.jianshu.com/p/5d0b35affbe0
+* https://www.jianshu.com/p/ec7200a26d8b
+* https://mp.weixin.qq.com/s/Ky6zxfd4UsnZ22-HrBQ9JA
 #Java 内存模型（JMM）
 ##定义
 - JMM 是 JVM 中定义的一种并发编程的底层模型机制， 定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读/写共享变量的副本。
@@ -36,6 +37,41 @@
     - 处理器使用写缓冲区临时保存向内存写入的数据(异步写入)，通过以批处理的方式刷新写缓冲区，以及合并写缓冲区中对同一内存地址的多次写，减少对内存总线的占用；
     - 这个特性会对内存操作的执行顺序产生重要的影响：处理器对内存的读/写操作的执行顺序，不一定与内存实际发生的读/写操作顺序一致！
     ````
+##解决方案规则
+###内存屏障
+- java编译器在生成指令序列的适当位置会插入内存屏障指令来 保证特定操作的执行顺序 和 影响某些数据（或者是某条指令的执行结果）的内存可见性。
+####LoadLoad Barriers
+- 作用在两个读（Load）操作之间内存屏障。
+- 该屏障可以确保在该屏障之后的第一个读操作（load2）之前，一定能先加载load1对应的数据。
+- 禁止下面的普通读操作和上面的volatile读重排序
+
+####LoadStore Barriers
+- 作用在 Load 操作和Store 操作之间的内存屏障。
+- 该屏障可以确保 Store2 写出的数据对其他处理器可见之前，Load1 读取的数据一定先读入缓存。
+- 禁止下面的普通写操作和上面的volatile读重排序
+####StoreStore Barriers
+- 作用在两个Store 操作之间的内存屏障。
+- 该屏障可以确保在该屏障之后的第一个写操作（store2）之前，store1操作对其他处理器可见（刷新到内存）。
+- 禁止上面的普通写操作和下面的volatile写重排序
+####StoreLoad Barriers
+- 语义:可以把所有的写操作刷新到公共内存中去，并且使得其他缓存中的这个变量的缓存失效，所以下次在此读取时，就会重新从主存中load
+- 作用在 Store 操作和 Load 操作之间的内存屏障。
+- 屏障可以确保store1操作对其他处理器可见（刷新到内存）之后才能读取 Load2 的数据到缓存。
+- 禁止下面的volatile读写操作和上面的volatile写重排序
+###happens-before 规则
+- happens-before关系保证正确同步的多线程程序的执行结果不被改变。
+- JMM向程序员做出的保证，前一个操作的结果对后续操作时可见的。
+- 一个线程中，按照程序顺序，前面的操作 Happens-Before 于后续的任意操作
+- 对一个锁的解锁，happens-before于随后对这个锁的加锁(解锁数据对加锁时更新数据可见)
+- 对一个volatile域的写，happens-before于任意后续对这个volatile域的读
+- 如果A happens-before B，且B happens-before C，那么A happens-before C。
+    ````
+    线程1:x=42 Happens-Before 写变量 “v=true” ，这是规则 1 的内容；
+    线程2：读变量 “v=true”:写变量“v=true” Happens-Before 读变量 “v=true”，这是规则 3 的内容 。
+    再根据这个传递性规则，我们得到结果：“x=42” Happens-Before 读变量“v=true”，线程 B 能看到 “x == 42”,1.5 版本的并发工具包（java.util.concurrent）就是靠 volatile 语义来搞定可见性的。
+    ````
+- 它是指主线程 A 启动子线程 B 后，子线程 B 能够看到主线程在启动子线程 B 前的操作。
+- 线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。
 ###JMM重排序条件
 - https://blog.csdn.net/riemann_/article/details/96390511
 - as-if-serial：不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变。
@@ -53,50 +89,15 @@
   - 读final域重排序规则：读对象的引用和读该对象的final域禁止重排序（as-if-serial存在依赖），在读一个对象的final域之前，一定会先读这个包含这个final域的对象的引用。
      
 - happens-before:  as-if-serial语义保证单线程内程序的执行结果不被改变
-##解决方案
-##happens-before 规则
-- happens-before关系保证正确同步的多线程程序的执行结果不被改变。
-- JMM向程序员做出的保证，前一个操作的结果对后续操作时可见的。
-- 一个线程中，按照程序顺序，前面的操作 Happens-Before 于后续的任意操作
-- 对一个锁的解锁，happens-before于随后对这个锁的加锁(解锁数据对加锁时更新数据可见)
-- 对一个volatile域的写，happens-before于任意后续对这个volatile域的读
-- 如果A happens-before B，且B happens-before C，那么A happens-before C。
-    ````
-    线程1:x=42 Happens-Before 写变量 “v=true” ，这是规则 1 的内容；
-    线程2：读变量 “v=true”:写变量“v=true” Happens-Before 读变量 “v=true”，这是规则 3 的内容 。
-    再根据这个传递性规则，我们得到结果：“x=42” Happens-Before 读变量“v=true”，线程 B 能看到 “x == 42”,1.5 版本的并发工具包（java.util.concurrent）就是靠 volatile 语义来搞定可见性的。
-    ````
-- 它是指主线程 A 启动子线程 B 后，子线程 B 能够看到主线程在启动子线程 B 前的操作。
-- 线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。
-##内存屏障
-- java编译器在生成指令序列的适当位置会插入内存屏障指令来 保证特定操作的执行顺序 和 影响某些数据（或者是某条指令的执行结果）的内存可见性。
-###LoadLoad Barriers
-- 作用在两个读（Load）操作之间内存屏障。
-- 该屏障可以确保在该屏障之后的第一个读操作（load2）之前，一定能先加载load1对应的数据。
-- 禁止下面的普通读操作和上面的volatile读重排序
-
-###LoadStore Barriers
-- 作用在 Load 操作和Store 操作之间的内存屏障。
-- 该屏障可以确保 Store2 写出的数据对其他处理器可见之前，Load1 读取的数据一定先读入缓存。
-- 禁止下面的普通写操作和上面的volatile读重排序
-###StoreStore Barriers
-- 作用在两个Store 操作之间的内存屏障。
-- 该屏障可以确保在该屏障之后的第一个写操作（store2）之前，store1操作对其他处理器可见（刷新到内存）。
-- 禁止上面的普通写操作和下面的volatile写重排序
-###StoreLoad Barriers
-- 语义:可以把所有的写操作刷新到公共内存中去，并且使得其他缓存中的这个变量的缓存失效，所以下次在此读取时，就会重新从主存中load
-- 作用在 Store 操作和 Load 操作之间的内存屏障。
-- 屏障可以确保store1操作对其他处理器可见（刷新到内存）之后才能读取 Load2 的数据到缓存。
-- 禁止下面的volatile读写操作和上面的volatile写重排序
-##volatile解决方式
-- volatile 提供了可见性，任何一个线程对其的修改将立马对其他线程可见。volatile 属性不会被线程缓存，始终从主存中读取。
-- volatile 禁止指令重排序
+##解决方案实现-volatile
+- volatile 添加内存屏障
     ````
     - volatile 写操作的前面插入一个 StoreStore 屏障
     - volatile 写操作的后面插入一个 StoreLoad 屏障
     - volatile 读操作的后面插入一个 LoadLoad 屏障
     - volatile 读操作的后面插入一个 LoadStore 屏障
     ````
+- volatile 提供了可见性，任何一个线程对其的修改将立马对其他线程可见。volatile 属性不会被线程缓存，始终从主存中读取。
 - volatile 提供了 happens-before 保证，对 volatile 变量 V 的写入 happens-before 所有其他线程后续对 V 的读操作。
 - volatile 只能作用于属性，其中有一个线程修改了此属性，其他线程可以立即得到修改后的值；或者作为状态变量，如 flag = ture，实现轻量级同步。
 - volatile 属性的读写操作都是无锁的，但它没有提供原子性和互斥性。因为无锁，不需要花费时间在获取锁和释放锁上，所以说它是低成本的
@@ -110,7 +111,6 @@
     2.CAS机制所确保的是一个变量的原子性操作，而不能保证整个代码块的原子性，比如需要保证3个变量共同进行原子性的更新，就不得不使用synchronized或者lock了。
     3.ABA问题:添加版本号解决ABA问题
     ````
-
 ##final解决方式
 - final重排序规则保证在对象引用为任意线程可见之前，对象的final域已经被正确初始化过了，解决安全发布问题
 ##synchronizer解决方式

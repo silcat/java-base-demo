@@ -124,6 +124,7 @@ XX:GCRatio 直接设置吞吐量的大小。
 - -XX:+UseG1GC 告诉JVM使用G1收集器
 - -XX:MaxGCPauseMillis=200 设置最大GC目标最大停顿时间为200ms，这是一个软指标。JVM会最大努力去达到它，一般情况下这个值设置到100ms或者200ms，对这个参数的调优是一个持续的过程
 - 大对象碎片调优
+- 
 ````
 -XX:G1HeapRegionSize 大对象碎片调优,堆内存耗尽之前，为了找到一系列连续的region也会导致FullGC
 -XX:PretenureSizeThreshold 	大对象晋升老年代阈值。
