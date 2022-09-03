@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 
 public class Test {
@@ -33,12 +34,14 @@ public class Test {
     //获取完整对象
 
     public static void main(String[] args) throws IOException {
+        new BigInteger("11111").pow(5)
         System.out.println("现在开始初始化容器");
         ApplicationContext factory = new AnnotationConfigApplicationContext(LifeCycleConfig.class);
         System.out.println("容器初始化成功");
         //得到Preson，并使用
         Person person = factory.getBean("person",Person.class);
         System.out.println(person.getName());
+
 
         System.out.println("现在开始关闭容器！");
 

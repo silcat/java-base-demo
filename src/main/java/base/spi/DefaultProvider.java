@@ -1,7 +1,7 @@
-package designMode.provider;
+package base.spi;
 
 
-import static designMode.provider.ProviderManager.DEFAULT_PROVIDER;
+import static base.spi.ProviderManager.DEFAULT_PROVIDER;
 
 /**
  * 通过静态块注册

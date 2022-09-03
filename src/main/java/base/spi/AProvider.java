@@ -1,4 +1,4 @@
-package designMode.provider;
+package base.spi;
 
 /**
  * 通过SPI注册

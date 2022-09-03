@@ -1,4 +1,4 @@
-package designMode.provider;
+package base.spi;
 
 /**
  * Created by admin on 2018/2/2.
@@ -6,7 +6,7 @@ package designMode.provider;
 public class MainTest {
 
     public static void main(String[] args) throws Exception {
-        ProviderManager.doSomething("designMode.provider.BProvider");
+        ProviderManager.doSomething("base.spi.BProvider");
     }
 
 }

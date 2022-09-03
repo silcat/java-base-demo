@@ -6,6 +6,7 @@ package base;
  */
 public class InterfaceAndExtendTest {
     public static void main(String[] args) {
+
         Car aCar = new ACar();
         Car bCar = new BCar();
         Car cCar = new CCar();

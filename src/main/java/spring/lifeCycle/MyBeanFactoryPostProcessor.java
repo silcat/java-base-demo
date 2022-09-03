@@ -13,7 +13,7 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     public MyBeanFactoryPostProcessor() {
         super();
-        log.info("这是BeanFactoryPostProcessor实现类构造器！！");
+
 
     }
 
