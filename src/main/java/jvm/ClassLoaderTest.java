@@ -1,6 +1,5 @@
 package jvm;
 
-import base.Stream;
 import juc.test.TSynchronized;
 import oracle.jrockit.jfr.events.Bits;
 import sun.security.ec.CurveDB;
@@ -55,11 +54,8 @@ public class ClassLoaderTest {
          * @return 二进制字节数组
          */
         private byte[] loadByteClassData(String name) throws ClassNotFoundException {
-            String content = Stream.getPath(loadPath + name + fileSuffixExt);
-            if (content == null){
-                throw new ClassNotFoundException();
-            }
-            return content.getBytes();
+
+            return null;
         }
 
 

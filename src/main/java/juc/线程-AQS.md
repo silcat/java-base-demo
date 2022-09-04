@@ -13,5 +13,9 @@
       * ![img.png](img/非公平锁.png) 
       * ![img.png](img/公平锁.png) 
     * Share（共享）：多个线程可同时执行，如 Semaphore/CountDownLatch
+#Condition
+* Condition是在java 1.5中才出现的，它用来替代传统的Object的wait()、notify()实现线程间的协作，相比使用Object的wait()、notify()，使用Condition中的await()、signal()这种方式实现线程间协作更加安全和高效。因此通常来说比较推荐使用Condition
+* AbstractQueueSynchronizer中实现了Condition中的方法，主要对外提供awaite(Object.wait())和signal(Object.notify())调用。
+* ![img.png](img/condition.png) 
     
 
