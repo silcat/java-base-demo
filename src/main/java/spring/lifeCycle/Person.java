@@ -8,16 +8,17 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Component
-public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean, DisposableBean {
+public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean {
 
     private String name;
+    private String cons;
+    private String test ="1";
+    public static String sta ="2";
 
-
-    private BeanFactory beanFactory;
-    private String beanName;
 
     public Person() {
-        System.out.println("Person：【构造器】实例化");
+        cons ="2";
+        System.out.println("【构造器】实例化");
     }
 
     public String getName() {
@@ -34,14 +35,12 @@ public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean
     @Override
     public void setBeanFactory(BeanFactory arg0) throws BeansException {
         System.out.println("【BeanFactoryAware接口】调用BeanFactoryAware.setBeanFactory()");
-        this.beanFactory = arg0;
     }
 
     // 这是BeanNameAware接口方法
     @Override
     public void setBeanName(String arg0) {
         System.out.println("【BeanNameAware接口】调用BeanNameAware.setBeanName()");
-        this.beanName = arg0;
     }
 
     // 这是InitializingBean接口方法
@@ -51,11 +50,11 @@ public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean
                 .println("【InitializingBean接口】调用InitializingBean.afterPropertiesSet()");
     }
 
-    // 这是DiposibleBean接口方法
-    @Override
-    public void destroy() throws Exception {
-        System.out.println("【DiposibleBean接口】调用DiposibleBean.destory()");
-    }
+//    // 这是DiposibleBean接口方法
+//    @Override
+//    public void destroy() throws Exception {
+//        System.out.println("【DiposibleBean接口】调用DiposibleBean.destory()");
+//    }
 
     // 通过<bean>的init-method属性指定的初始化方法
     @PostConstruct
@@ -65,9 +64,9 @@ public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean
     }
 
     // 通过<bean>的destroy-method属性指定的初始化方法
-    @PreDestroy
-    public void myDestory() {
-        System.out.println("【destroy-method】调用<bean>的destroy-method属性指定的初始化方法");
-    }
+//    @PreDestroy
+//    public void myDestory() {
+//        System.out.println("【destroy-method】调用<bean>的destroy-method属性指定的初始化方法");
+//    }
 }
 

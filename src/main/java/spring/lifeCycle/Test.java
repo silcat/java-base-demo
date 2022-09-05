@@ -34,7 +34,6 @@ public class Test {
     //获取完整对象
 
     public static void main(String[] args) throws IOException {
-        new BigInteger("11111").pow(5)
         System.out.println("现在开始初始化容器");
         ApplicationContext factory = new AnnotationConfigApplicationContext(LifeCycleConfig.class);
         System.out.println("容器初始化成功");
