@@ -2,7 +2,7 @@
 * https://www.zhihu.com/question/521902218
 * https://mp.weixin.qq.com/s/q1sErlGQ9_4PLHXlnwoh1g
 #什么是JIT
-* ![img.png](synchonize.png)
+* ![img.png](img/JIT.png)
 * 当程序需要首次启动和执行的时候，解释器可以首先发挥作用，一行一行直接转译运行，但效率低下。
 * 当多次调用方法或循环体时JIT编译器可以发挥作用，把越来越多的代码编译成本地机器码，之后可以获得更高的效率（占内存），此时就有了智能化的编译器(JIT编译器)
 # JIT优化技术

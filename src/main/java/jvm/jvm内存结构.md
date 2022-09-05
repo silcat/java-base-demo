@@ -52,7 +52,7 @@
 ````
 ## 老年代
 * Full GC 是发生在老年代的垃圾收集动作，Full GC的同时一般都会带着Minor GC，因为Full GC是为了Minor GC后存活的对象能够进入老年代
-* 老年代空间分配担保机制：如果新生代有大量对象存活，同时Survivor区也放不下了，那么这些对象必须要放到老年代中，但是如果此时老年代中剩余空间也不足以放下这些对象触发
+* 老年代空间分配担保机制：如果新生代有大量对象存活，同时Survivor区也放不下了，那么这些对象必须要放到老年代中，但是如果此时老年代中剩余空间小于年轻代平均晋升大小以放下这些对象触发
 * full GC触发条件：
 ````
 第一：是老年代可用内存小于新生代全部对象的大小，如果没开启空间担保参数，会直接触发Full GC，所以一般空间担保参数都会打开；注：jDK1.8之后已经取消了-XX:-HandlePromotionFailure机制
@@ -82,8 +82,8 @@
 Class 文件中除了有类的版本、字段、方法、接口等描述信息外，还有用于存放编译期生成的各种字面量（Literal）和符号引用（Symbolic Reference）的 常量池表(Constant Pool Table) 。
 字面量是源代码中的固定值的表示法，即通过字面我们就能知道其值的含义。字面量包括整数、浮点数和字符串字面量，符号引用包括类符号引用、字段符号引用、方法符号引用和接口方法符号引用。
 ````
-- ![img.png](字符串常量池.png) 
-- ![img.png](jvm指针.png) 
+- ![img.png](img/字符串常量池.png) 
+- ![img.png](img/jvm指针.png) 
 ````
 string a = "abc" abc就是字面量，String类名就是符合引用
 ````
@@ -121,7 +121,7 @@ string a = "abc" abc就是字面量，String类名就是符合引用
 ##对象头（Header）
 - https://jishuin.proginn.com/p/763bfbd7033f
 - 在 32 位的虚拟机中对象在内存中的布局分为三块区域 MarkWord ，Klass Pointer 和数组长度,分别占用 32 位，也就是 4 字节。
-- ![img.png](img.png)
+- ![img.png](img/img.png)
 ###MarkWord
 - 用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等等。
 ###Klass Pointer
