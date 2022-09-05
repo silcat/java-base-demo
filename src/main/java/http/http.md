@@ -1,5 +1,6 @@
 # TCP/IP协议族分为4层
 * 参考文档：https://mp.weixin.qq.com/s/5PhLWZ4Z9kagZSBlhzcLAg
+* ![img.png](osi-model-detail.png) 
 ##应用层：
 * 主要是与应用通信使用到的协议，
 * 比如：FTP、DNS、HTTP
