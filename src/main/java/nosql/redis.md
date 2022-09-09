@@ -1,51 +1,47 @@
-* https://redis.io/topics/persistence
-##数据结构
-* 源码：http://daoluan.net/redis-source-notes/
-* 查看文档：https://www.cnblogs.com/sgh1023/p/10123767.html
-* String
-    * get(key) 获取值
-    * set(key,value) 放入值
-    * incr(key)	key自增1，如果key不存在，自增后get(key)=1
-    * decr(key)	key自减1，如果key不存在，自减后get(key)=-1
-    * setnx(key, value)	key不存在，才设置
-* Map
-* List
-    * lpush(key,value)    将元素推入列表的左端
-    * rpush(key,value)     将元素推入列表的右端   
-    * lpop(key)    将元素从列表左端弹出   
-    * rpop(key)    将元素从列表右端弹出  
-    * blpop(key) 在没有消息的时候，它会阻塞住直到消息到来  
-    * LINDEX    获取列表在给定位置上的单个元素   
-    * lrange(key，start，end)     获取列表在给定范围的所有元素
-* Set
-    * sadd(key,value)  向集合key添加element（如果element已经存在，添加失败）  
-    * srem(key)       将集合key中的element移除   
-    * sismember(key,value)  检查元素value是否存在于集合key中
-    * smembers(key)     返回集合包含的所有元素
-* SortedSet
-    * zadd(key,score,value)    将一个带有给定分值的成员添加到有序集合里面
-    * zrange(key,begin,end)    根据元素在有序排列中所处的位置，从有序集合中取出多个元素
-    * zrangebyscore(key,beginscore,endscore)    获取有序集合在给定分值范围内的所有元素
-    * zrem(key,value)   如果给定成员存在于有序集合中，那么移除这个成员
-* Pub/Sub
-    * publish(channel,value) 发布消息
-    * subsribe(channel) 订阅消息
-    * unsubsribe(channel)  取消订阅
-* BloomFilter
-* HyperLogLog
-    * 极小空间完成独立数量的统计，本质是字符串类型
-    * pfdadd（key,value）添加数据
-    * pfcount(key) 统计数量
-    * pfmerge(key1,key2) 合并
-* Geo
-    * 存储经纬度，计算两地距离，范围计算等
-    * geoadd（key，经度，纬度，cityName） 添加坐标 
-    * geopos（key，cityName）   获取地理位置
-    * geodist（key，cityName1，cityName2，km）两地间的距离
-* redisModule
-    * redis 4.0后支持module功能之后，可以以插件的形式给redis扩展一些新的功能，比如本篇说到的rediSQL，rebloom。
-    * https://www.cnblogs.com/huangxincheng/p/10292303.html
-
+##为什么使用缓存
+* 高性能:非实时变化的数据-查询mysql耗时需要300ms,存到缓存redis，每次查询仅仅1ms,性能瞬间提升百倍。    
+* 高并发:mysql 单机支撑到2K QPS就容易报警了，但是使用缓存的话，单机支撑的并发量轻松1s几万~十几万。原因是缓存位于内存，内存对高并发的良好支持。
+* 现有硬件系统难以处理的高性能高并发都可以用缓存来优化
+##缓存的使用方式
+* 本地缓存：
+    * 局部变量map结构缓存部分业务数据。缺点仅限于类的自身作用域内，类间无法共享缓存
+    * 静态变量map一次获取缓存内存中，静态变量实现类间可共享，进程内可共享，缓存的实时性稍差
+        * 结合ZooKeeper的自动发现机制，实时变更本地静态变量缓存
+        * https://www.jianshu.com/p/40cdd4bfe183
+    * Ehcache纯Java的进程内缓存框架
+        * https://www.cnblogs.com/liululee/p/13354481.html
+    * spring注解
+* 分布式缓存 
+    * memcached缓存
+        * MemCache虽然被称为"分布式缓存"，但是MemCache本身完全不具备分布式的功能，MemCache集群之间不会相互通信，所谓的"分布式"，完全依赖于客户端程序的实现
+        * MemCache集群的方式也是从分区容错性的方面考虑的，假如Node1宕机了，此时由于集群中其他节点数据还存在。
+    * redis缓存 
+* Spring注解缓存
+    * 参考文档
+        * https://developer.ibm.com/zh/articles/os-cn-spring-cache/
+        * https://www.xuebuyuan.com/2174369.html
+#为什么要用redis
+* Redis 支持更丰富的数据类型，持久化，容灾，集群，更快，事务，lua脚本，多种过期策略等
+* redis除了缓存还能实现分布式锁，限流，消息队列，排行榜等等
+# redis为什么这么快
+* ![](img/why-redis-so-fast.png)
+* 基于内存:内存的访问速度是磁盘的上千倍；
+* 非阻塞IO和 IO 多路复用的单线程模型:基于 Reactor 模式设计开发了一套高效的事件处理模型
+* 数据结构简单:内置了多种优化过后的数据结构实现，查询和修改都是大部分都是o(1)。
+* 避免上下文切换：单线程模型，无锁，无死锁
+# 为什么说redis是单线程
+* redise 基于 Reactor 模式，使用 I/O 多路复用程序用一个线程（bossGroup）也可以来监听多个套接字，文件事件处理器以单线程方式运行（workgroup线程池为1，而netty大于1）
+* 单线程易于维护
+* redis的性能瓶颈不在在于内存和带宽，而非CPU
+* 确切的说redis的工作线程是单线程的
+##单线程的缺点
+* 使用高耗时的Redis命令是很危险的，会占用唯一的一个线程的大量处理时间，导致所有的请求都被拖慢
+* 大key删除
+* 其他如hgetall、lrange、smembers、zrange、sinte keys scan命令等o(n)的命令
+##redis多线程
+* 为了解决大key删除的问题，redis 4引用多线程解决惰性删除，工作线程依旧是单线程
+* redis 6为了提高网络 IO 读写性能，网络数据的读写这类耗时操作上使用了多线程，工作线程仍然是单线程顺序执行。因此，你也不需要担心线程安全问题。
+* redis 6默认关闭多线程的，如需开启配置redis.conf文件
 ## redis数据持久化
 * 参考文档：https://mp.weixin.qq.com/s/cOK6IRQkavnV8EUhppfgug   
 * AOF:先把命令追加到操作日志的尾部，保存所有的历史操作
