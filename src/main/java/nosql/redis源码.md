@@ -81,8 +81,25 @@
 * http://daoluan.net/redis-source-notes/
 ##通用
 * redis 的 key一般为字符串，value 为  redisObject结构
+* redisObject 是 Redis 类型系统的核心， 数据库中的每个键、值，以及 Redis 本身处理的参数， 都表示为这种数据类型。
+  * 数据结构
+      ````
+      typedef struct redisObject {
+          // 类型
+          unsigned type:4;
+          // 对齐位
+          unsigned notused:2;
+          // 编码方式
+          unsigned encoding:4;
+          // LRU 时间（相对于 server.lruclock）
+          unsigned lru:22;
+          // 引用计数
+          int refcount;
+          // 指向对象的值
+          void *ptr;
+      } robj;
+      ````
 * redisObjec定义了type和encoding字段对不同的数据类型加以区别，redisObject就是string、hash、list、set、zset的父类，
-* ![](img/redisObject.PNG)
 * redis会自适应的根据不同的value选择不同编码方式。
 ##String
 ###编码方式
@@ -227,46 +244,12 @@ typedef struct zset {
    * ![](img/捕获.PNG)
 ##其他
 * bitmapStr和hyperLoglog底层实质是String  ， GEO实质是 ZSET。
-#redis数据类型
-* redisObject 是 Redis 类型系统的核心， 数据库中的每个键、值，以及 Redis 本身处理的参数， 都表示为这种数据类型。
-* 数据结构
-    ````
-    /*
-     * Redis 对象
-     */
-    typedef struct redisObject {
-        // 类型
-        unsigned type:4;
-        // 对齐位
-        unsigned notused:2;
-        // 编码方式
-        unsigned encoding:4;
-        // LRU 时间（相对于 server.lruclock）
-        unsigned lru:22;
-        // 引用计数
-        int refcount;
-        // 指向对象的值
-        void *ptr;
-    } robj;
-    ````
-* 使用数据结构由 type 属性和 encoding 属性决定 ，ptr指定存储数据结构
-    * [如何决定使用何种数据结构存储数据](https://redisbook.readthedocs.io/en/latest/_images/graphviz-243b3a1747269b8e966a9bdd9db2129d983f2b23.svg)
-* BLPOP 、 BRPOP 和 BRPOPLPUSH 这个几个阻塞命令的实现原理上
-    * 若阻塞则生成blockkey（字典）：key为阻塞键，value为客户端
-    * 若有新数据，则生成readyKey（list）,查找阻塞的客户端并通知
-        ````
-        typedef struct readyList {
-            redisDb *db;
-            robj *key;
-        } readyList;
-       ````
-* 事务的实现
+## 事务的实现
 * https://redisbook.readthedocs.io/en/latest/feature/transaction.html#id2    
 * 开启事务时，除了 EXEC 、 DISCARD 、 MULTI 和 WATCH命令，会将其他命令全部放进一个事务队列（数组）而不是立即执行
 * 当EXEC 命令执行时，服务器根据客户端所保存的事务队列， 以先进先出（FIFO）的方式执行事务队列中的命令
 * 使用watched，会保存在 watched_keys （字典）：key为键，value为客户端
-
-# redis数据库的结果
+##redis数据库
 * 数据结构
 ````
 typedef struct redisDb {
