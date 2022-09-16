@@ -1,4 +1,4 @@
-package mysql.分布式事务.jta;
+package 高并发架构.分布式事务.jta;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
