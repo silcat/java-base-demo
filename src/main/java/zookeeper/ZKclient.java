@@ -7,14 +7,15 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
-import zookeeper.cure.ClientFactory;
+
+import javax.annotation.Resource;
 
 
 @Slf4j
 @Data
 public class ZKclient {
 
-
+    @Resource(name = "zkClient")
     private CuratorFramework client;
 
     //Zk集群地址
@@ -22,27 +23,10 @@ public class ZKclient {
 
     public static ZKclient instance = null;
 
-    static {
-        instance = new ZKclient();
-        instance.init();
+
+    public CuratorFramework getClient() {
+        return client;
     }
-
-    private ZKclient() {
-
-    }
-
-    public void init() {
-
-        if (null != client) {
-            return;
-        }
-        //创建客户端
-        client = ClientFactory.createSimple(ZK_ADDRESS);
-
-        //启动客户端实例,连接服务器
-        client.start();
-    }
-
     public void destroy() {
         CloseableUtils.closeQuietly(client);
     }
@@ -94,11 +78,9 @@ public class ZKclient {
 
             Stat stat = client.checkExists().forPath(zkPath);
             if (null == stat) {
-                log.info("节点不存在:{}", zkPath);
                 return false;
             } else {
 
-                log.info("节点存在 stat is:{}", stat.toString());
                 return true;
 
             }

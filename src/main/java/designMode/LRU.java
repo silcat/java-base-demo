@@ -2,6 +2,7 @@ package designMode;
 
 import lombok.*;
 import lombok.Builder;
+import org.springframework.cache.annotation.Cacheable;
 import strategyDemo.TreeStrategy;
 
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class LRU {
             size = 0;
         }
         // 在链表头部添加节点 x
+        @Cacheable
         public void addFirst(Node x) {
             x.next = head.next;
             x.next.prev = x;

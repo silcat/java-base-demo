@@ -7,6 +7,7 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import zookeeper.ZKclient;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -21,6 +22,7 @@ public class ZkLock implements Lock {
     private static final String LOCK_PREFIX = ZK_PATH + "/";
     private static final long WAIT_TIME = 1000;
     //Zk客户端
+    @Resource
     CuratorFramework client = null;
 
     private String locked_short_path = null;
@@ -30,8 +32,8 @@ public class ZkLock implements Lock {
     private Thread thread;
 
     public ZkLock() {
-        ZKclient.instance.init();
-        synchronized (ZKclient.instance)
+
+        synchronized (client)
         {
             if (!ZKclient.instance.isNodeExist(ZK_PATH))
             {
@@ -134,7 +136,6 @@ public class ZkLock implements Lock {
             @Override
             public void process(WatchedEvent watchedEvent) {
                 System.out.println("监听到的变化 watchedEvent = " + watchedEvent);
-                log.info("[WatchedEvent]节点删除");
 
                 latch.countDown();
             }
@@ -215,7 +216,6 @@ public class ZkLock implements Lock {
 
         // 如果是第一个，代表自己已经获得了锁
         if (locked_short_path.equals(waiters.get(0))) {
-            log.info("成功的获取分布式锁,节点为{}", locked_short_path);
             return true;
         }
         return false;

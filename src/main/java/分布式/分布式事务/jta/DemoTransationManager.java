@@ -1,4 +1,4 @@
-package 高并发架构.分布式事务.jta;
+package 分布式.分布式事务.jta;
 
 import javax.transaction.*;
 
