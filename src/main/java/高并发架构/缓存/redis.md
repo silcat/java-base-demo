@@ -77,9 +77,14 @@
 ####流程
 * ![](img/redis主从复制.png)
 * ![](img/redis主从.PNG)
-* 第一次连接全量复制，后续通过异步命令同步master新增数据
 * master 默认每隔 10秒 发送一次 heartbeat，slave node 每隔 1秒 发送一个 heartbeat。
 * slave 不会过期 key，只会等待 master淘汰了一个 key，那么会模拟一条 del 命令发送给 slave。
+####数据同步
+* https://blog.csdn.net/qq_15022971/article/details/123839648
+* 全量同步：第一次连接全量复制，后续通过异步命令同步master新增数据
+![](img/redis全量复制.png)
+* 部分同步：因为从节点每秒都会和主节点同步自己的偏移量信息，主节点发现从节点的偏移量在复制积压缓冲区里面的时候，就会把数据从复制积压缓冲区同步到从节点
+![](img/redis部分同步.png)
 ####解决问题
 *  主从复制-> 读写分离 -> 水平扩容支撑读高并发
 ####产生问题
