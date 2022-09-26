@@ -178,3 +178,32 @@ public class BookServiceProxy2 {}
     * 方法区中类静态属性引用的对象:我们在类中使用的static声明的引用类型字段
     * 方法区中常量引用的对象:方法区中常量引用的对象
     * 程序中native本地方法引用的对象
+#Spring如何内嵌tomcat容器的
+* https://www.zhihu.com/question/354071128
+* SpringBoot 的启动是通过 new SpringApplication()实例来启动的，启动过程主要做如下几件事情
+    * 配置属性，
+    * 获取监听器发布应用开始启动事件
+    * 初始化输入参数
+    * 输入参数配置环境 输出 banner
+    * 创建上下文
+    * 预处理上下文
+    * 刷新上下文
+    * 再刷新上下文
+    * 发布应用
+    * 已经启动事件发布应用启动完成事件
+* 启动 Tomcat 就是在第 7 步中“刷新上下文”
+    * Tomcat 的启动主要是初始化 2 个核心组件，连接器(Connector)和容器（Container），
+    * 一个 Tomcat 实例就是一个 Server，一个 Server 包含多个 Service，也就是多个应用程序
+    * 每个 Service 包含多个连接器（Connetor）和一个容器（Container)
+    * 而容器下又有多个子容器，按照父子关系分别为：Engine,Host,Context,Wrapper，其中除了 Engine 外，其余的容器都是可以有多个。
+* 内置tomcat配置优化
+    * https://blog.csdn.net/swadian2008/article/details/120314524
+* 外置tomcat部署
+   * https://www.jianshu.com/p/a5195a08da3e   
+   * https://blog.csdn.net/weixin_42736075/article/details/105872359
+   * springboot内置tomcat和外部独立部署tomcat差别  
+       * 外置tomcat可以部署多个服务，微服务没人这么干
+       * 配置方式不同
+       
+    
+  
