@@ -1,4 +1,4 @@
-package io.netty.client;
+package 服务器.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -7,7 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.ClientHandler;
+import 服务器.netty.handler.ClientHandler;
 
 import java.net.InetSocketAddress;
 

@@ -238,7 +238,22 @@
 * 32G 内存+ 8 核 CPU + 1T 磁盘，但是分配给 Redis 进程的是 10g 内存，一般线上生产环境，Redis 的内存尽量不要超过 10g，超过 10g 可能会有问题  
 * 你往内存里写的是什么数据？每条数据的大小是多少？商品数据，每条数据是 10kb。100 条数据是 1mb，10 万条数据是 1g。常驻内存的是 200 万条商品数据，占用内存是 20g，仅仅不到总
   内存的 50%。目前高峰期每秒就是 3500 左右的请求量
-##redis实战案例
+#redis集群如何指定slot
+* 设置key： {XX}:key 
+* JedisCluster 会先取大括号的值计算hash
+````
+  private static String extractHashTag(String key, boolean returnKeyOnAbsence) {
+    int s = key.indexOf("{");
+    if (s > -1) {
+      int e = key.indexOf("}", s + 1);
+      if (e > -1 && e != s + 1) {
+        return key.substring(s + 1, e);
+      }
+    }
+    return returnKeyOnAbsence ? key : null;
+  }
+````
+#redis实战案例
 ###微信抢红包 
 * 拆红红包算法 
 * 放入红包：list
