@@ -1,5 +1,7 @@
 package 服务器.socket.test;
 
+import sun.text.normalizer.UTF16;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -7,12 +9,14 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 public class NioServer {
     private static final int BUF_SIZE=1024;
-    private static final int PORT = 8080;
+    private static final int PORT = 9001;
     private static final int TIMEOUT = 3000;
+    private static final ByteBuffer READ_BUFFER = ByteBuffer.allocate(1024 * 4);
     public static void main(String[] args)
     {
         selector();
@@ -26,18 +30,17 @@ public class NioServer {
     }
     public static void handleRead(SelectionKey key) throws IOException{
         SocketChannel sc = (SocketChannel)key.channel();
-        ByteBuffer buf = (ByteBuffer)key.attachment();
         //read非阻塞，若内核缓冲区无数据立即返回
-        long bytesRead = sc.read(buf);
-        while(bytesRead>0){
-            buf.flip();
-            while(buf.hasRemaining()){
-                System.out.print((char)buf.get());
-            }
-            System.out.println();
-            buf.clear();
-            bytesRead = sc.read(buf);
+        StringBuilder sb = new StringBuilder();
+        long bytesRead = sc.read(READ_BUFFER);
+        while(bytesRead>0&&!sb.toString().contains("end")){
+            READ_BUFFER.flip();
+            String msg = StandardCharsets.UTF_8.decode(READ_BUFFER).toString();
+            sb.append(msg);
+            READ_BUFFER.clear();
+            bytesRead = sc.read(READ_BUFFER);
         }
+        System.out.println(sb.toString());
         if(bytesRead == -1){
             sc.close();
         }

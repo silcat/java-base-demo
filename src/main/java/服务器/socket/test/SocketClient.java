@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 public class SocketClient {
     public static void main(String[] args) throws IOException {
-       bio();
-//       nio();
+//       bio();
+       nio();
     }
     public static void bio() throws IOException {
 
