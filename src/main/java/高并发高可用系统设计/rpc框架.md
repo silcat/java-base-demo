@@ -56,6 +56,7 @@
  * 4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型）
  * 1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id）
 ````
+* 实现在netty目录 编码与解码
 
 
 
