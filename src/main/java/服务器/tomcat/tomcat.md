@@ -1,28 +1,27 @@
 #介绍
 * tomcat是http服务器+servlet容器，是一个web容器
 #架构
-* ![](tomcat总体架构.jpg)
+* ![](img/tomcat总体架构.jpg)
 ##连接器
-* ![](连接器.jpg)
+* ![](img/连接器.jpg)
 * 主要功能
     * 网络通信：endpoint
     * 应用层协议解析：procesor
     * tomcat请求与servlet请求转化：adapter
     * protocolHandler封装IO模型和通信协议的差异
-    
 ##容器
 * https://www.cnblogs.com/kismetv/p/7228274.html
-* ![](容器.jpg)
+* ![](img/容器.jpg)
 * Tomcat 设计了 4 种具有父子关系容器，
    * Engine
    * Host ：虚拟主机，对应了服务器中一个网络名实体(如”www.test.com”，或IP地址”116.25.25.25”)，这个名字应该在DNS服务器上注册。
    * Context ：web应用/war包
    * Wrapper ：servelt（可以多个）
-* ![](容器2.jpg)
+* ![](img/容器2.jpg)
 * host1 和host2是两个项目
 ##NIO请求流程
 * https://www.jianshu.com/p/f91f99610b9e
-* ![](point.PNG)
+* ![](img/point.PNG)
 * Acceptor 接收socket线程，这里虽然是基于NIO的connector，但是在接收socket方面还是传统的serverSocket.accept()方式，获得SocketChannel对象，然后封装在一个tomcat的实现类org.apache.tomcat.util.net.NioChannel对象中。然后将NioChannel对象封装在一个PollerEvent对象中，并将PollerEvent对象压入events queue里。这里是个典型的生产者-消费者模式，Acceptor与Poller线程之间通过queue通信，Acceptor是events queue的生产者，Poller是events queue的消费者。
 * Poller Poller线程中维护了一个Selector对象，NIO就是基于Selector来完成逻辑的。在connector中并不止一个Selector，在socket的读写数据时，为了控制timeout也有一个Selector，在后面的BlockSelector中介绍。可以先把Poller线程中维护的这个Selector标为主Selector。 Poller是NIO实现的主要线程。首先作为events queue的消费者，从queue中取出PollerEvent对象，然后将此对象中的channel以OP_READ事件注册到主Selector中，然后主Selector执行select操作，遍历出可以读数据的socket，并从Worker线程池中拿到可用的Worker线程，然后将socket传递给Worker。整个过程是典型的NIO实现。
 * Worker Worker线程拿到Poller传过来的socket后，将socket封装在SocketProcessor对象中。然后从Http11ConnectionHandler中取出Http11NioProcessor对象，从Http11NioProcessor中调用CoyoteAdapter的逻辑，跟BIO实现一样。在Worker线程中，会完成从socket中读取http request，解析成HttpServletRequest对象，分派到相应的servlet并完成逻辑，然后将response通过socket发回client。在从socket中读数据和往socket中写数据的过程，并没有像典型的非阻塞的NIO的那样，注册OP_READ或OP_WRITE事件到主Selector，而是直接通过socket完成读写，这时是阻塞完成的，但是在timeout控制上，使用了NIO的Selector机制，但是这个Selector并不是Poller线程维护的主Selector，而是BlockPoller线程中维护的Selector，称之为辅Selector。
