@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import 服务器.netty.common.MessageFormatConst;
 
 import java.util.List;
 
@@ -39,6 +40,12 @@ public class KoyoDecode extends ByteToMessageDecoder {
         if (in.readableBytes() >= BODY_LENGTH) {
             //2.标记当前readIndex的位置，以便后面重置readIndex 的时候使用
             in.markReaderIndex();
+            byte magic = in.readByte();
+            byte vervion = in.readByte();
+            if (MessageFormatConst.MAGIC != magic || MessageFormatConst.VERSION != vervion){
+                System.out.print("版本错误");
+                return;
+            }
             int dataLength = in.readInt();
             //4.遇到不合理的情况直接 return
             if (dataLength < 0 || in.readableBytes() < 0) {

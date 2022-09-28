@@ -27,6 +27,13 @@ SocketImpl SocksSocketImpl
    * 3次握手：new Socket（）->Socket.connect(address)->DualStackPlainSocketImpl.connect0(nativefd, address, port)
 * 服务端
    * 3次握手：serverSocket.accept()—>DualStackPlainSocketImpl.accept0(nativefd, isaa);
-#NIO   
+* 其中accept0方法是阻塞的
+* read和写操作也是阻塞
+#NIO
+* 包括 bytebuffer，channal，selector三个组件
+* accept0方法是非阻塞阻塞的没有数据立即返回,读写依旧阻塞
+* 每 accept 一个客户端连接后，将这个文件描述符（connfd）放到一个数组里
+* 执行select0（）方法也是阻塞
+   
 
 
