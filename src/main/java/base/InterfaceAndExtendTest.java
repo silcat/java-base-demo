@@ -1,12 +1,14 @@
 package base;
 
 
+import redis.clients.jedis.Jedis;
+
 /**
  * 接口，继承 与 多态
  */
 public class InterfaceAndExtendTest {
     public static void main(String[] args) {
-
+ new RedisTe
         Car aCar = new ACar();
         Car bCar = new BCar();
         Car cCar = new CCar();
