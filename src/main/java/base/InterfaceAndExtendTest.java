@@ -8,7 +8,7 @@ import redis.clients.jedis.Jedis;
  */
 public class InterfaceAndExtendTest {
     public static void main(String[] args) {
- new RedisTe
+
         Car aCar = new ACar();
         Car bCar = new BCar();
         Car cCar = new CCar();
