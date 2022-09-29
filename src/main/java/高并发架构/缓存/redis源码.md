@@ -34,8 +34,12 @@
 * smembers(key)     返回集合包含的所有元素
 * srandommember(key,2) 随机返回2个元素
     * 微信小程序抽奖
-* 集合运算：差集sdiff A[B]交集，差集
-    * 共同关注的人，可能认识的人
+* 集合运算：
+    * 差集sdiff A[B]差集
+        * 可能认识的人
+    * sinterstore 交集
+        * 共同关注的人
+    * sunion set1 set2 并集
 ###ZSet
 * zadd(key,score,value)    将一个带有给定分值的成员添加到有序集合里面
 * zrange(key,begin,end)    根元素排名
