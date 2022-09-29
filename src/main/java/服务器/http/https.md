@@ -1,6 +1,6 @@
 # 参考文档
 * https://www.iteye.com/blog/kingj-2103662
-* http://ningg.top/introduction-of-https/
+* 服务器.http://ningg.top/introduction-of-https/
 # SSL在HTTP与TCP之间新加一层
 ##流程
 * 浏览器将自己支持的一套加密规则发送给网站，如RSA加密算法，DES对称加密算法，SHA1摘要算法

@@ -4475,7 +4475,7 @@ firewall-cmd --list-all
 - 设置开放的端口号
 
 ```shell
-firewall-cmd --add-service=http --permanent
+firewall-cmd --add-service=服务器.http --permanent
 firewall-cmd --add-port=3306/tcp --permanent
 ```
 

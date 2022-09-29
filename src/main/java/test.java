@@ -16,14 +16,9 @@ import static javax.xml.bind.DatatypeConverter.printLong;
 public class test {
 
     public static void main(String[] args)  {
-        List<Integer> warningIndexs = Lists.newArrayList(1,2,3,4);
-        if (warningIndexs.size() > 0){
-            StringBuilder builder = new StringBuilder();
-            for (int indexs= 0;indexs>-1;indexs++){
-                    builder.append("tst");
-            }
-            String string = builder.toString();
-        }
+        boolean equals = new Integer(1933).equals(new Integer(12933));
+        System.out.println(equals);
+
 
     }
     private static void writeStr(ByteBuf buf, String s) {

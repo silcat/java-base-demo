@@ -1,5 +1,5 @@
 #数据结构
-* 源码：http://daoluan.net/redis-source-notes/
+* 源码：服务器.http://daoluan.net/redis-source-notes/
 * 查看文档：https://www.cnblogs.com/sgh1023/p/10123767.html
 ##API
 ###String
@@ -82,7 +82,7 @@
 
 #源码
 * https://redisbook.readthedocs.io/en/latest/compress-datastruct/intset.html#id2
-* http://daoluan.net/redis-source-notes/
+* 服务器.http://daoluan.net/redis-source-notes/
 ##通用
 * redis 的 key一般为字符串，value 为  redisObject结构
 * redisObject 是 Redis 类型系统的核心， 数据库中的每个键、值，以及 Redis 本身处理的参数， 都表示为这种数据类型。

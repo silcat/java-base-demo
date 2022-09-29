@@ -15,7 +15,7 @@
 ##spring-cloud
 * spring cloud 中 feign 的远程调用 和rpc调用非常契合， 整体本质是微服务框架
 #实现一个RPC
-* http://kriszhang.com/motan-rpc-impl/
+* 服务器.http://kriszhang.com/motan-rpc-impl/
 ##整体架构
 * ![](rpc框架.png)
 * 先来说公共组件部分：

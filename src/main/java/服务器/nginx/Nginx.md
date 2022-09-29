@@ -1,6 +1,6 @@
 #文档
 * https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx/reverse_proxy.html
-* http://dictionary.sharkchili.xyz/#/%E8%BF%90%E7%BB%B4/nginx%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E6%80%BB%E7%BB%93?id=%e5%8f%8d%e5%90%91%e4%bb%a3%e7%90%86%e7%a4%ba%e4%be%8b1
+* 服务器.http://dictionary.sharkchili.xyz/#/%E8%BF%90%E7%BB%B4/nginx%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E6%80%BB%E7%BB%93?id=%e5%8f%8d%e5%90%91%e4%bb%a3%e7%90%86%e7%a4%ba%e4%be%8b1
 #nginx配置文件
 ##全局块
 * 运行Nginx服务器的用户（组）、允许生成的worker process数、Nginx进程PID存放路径、日志的存放路径和类型以及配置文件引入等。
@@ -31,7 +31,7 @@
         * [flag]rewrite支持的flag标记
             * last：url重写后，马上发起一个新请求，再次进入server块，重试location匹配，超过10次匹配不到报500错误，地址栏不变
             * break：url重写后，直接使用当前资源，不再使用location余下的语句，完成本次请求，地址栏不变 
-    * 示例:rewrite ^/（.*） http：//www.ywx.org/$1 permanent；
+    * 示例:rewrite ^/（.*） 服务器.http：//www.ywx.org/$1 permanent；
         * 在上述指令中，rewrite为固定关键字，表示开启一条rewrite匹配规则
         * regex部分是^/（.*），这是一个正则表达式，表示匹配所有，
         * 匹配成功后跳转到http://www.ywx.org/$1。
@@ -55,5 +55,5 @@
     * 根据vrrp实现的nginx高可用组件
 ###全局变量
 * tcp
-* http
+* 服务器.http
 * 可以是$(tcp变量) 引用       

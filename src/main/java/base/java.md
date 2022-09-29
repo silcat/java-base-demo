@@ -21,7 +21,7 @@
 * a作为类的成员变量，存放于方法区中；1保存在堆(Heap)的实例中
 * a作为方法局部变量，存放于Java虚拟机栈(JVM Stacks)的局部变量表中；1也保存在栈内存中。
 #包装类缓存
-* http://kaito-kidd.com/2018/08/08/computer-system-float-point/
+* 服务器.http://kaito-kidd.com/2018/08/08/computer-system-float-point/
 * Byte,Short,Integer,Long 这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据，Character 创建了数值在 [0,127] 范围的缓存数据
 * 所有整型包装类对象之间值的比较，全部使用 equals 方法比较。
 #包装类自动拆箱装箱

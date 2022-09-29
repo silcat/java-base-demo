@@ -55,21 +55,21 @@ events
     open_file_cache max=65535 inactive=60s;
 
     #这个是指多长时间检查一次缓存的有效信息。
-    #语法:open_file_cache_valid time 默认值:open_file_cache_valid 60 使用字段:http, server, location 这个指令指定了何时需要检查open_file_cache中缓存项目的有效信息.
+    #语法:open_file_cache_valid time 默认值:open_file_cache_valid 60 使用字段:服务器.http, server, location 这个指令指定了何时需要检查open_file_cache中缓存项目的有效信息.
     open_file_cache_valid 80s;
 
     #open_file_cache指令中的inactive参数时间内文件的最少使用次数，如果超过这个数字，文件描述符一直是在缓存中打开的，如上例，如果有一个文件在inactive时间内一次没被使用，它将被移除。
-    #语法:open_file_cache_min_uses number 默认值:open_file_cache_min_uses 1 使用字段:http, server, location  这个指令指定了在open_file_cache指令无效的参数中一定的时间范围内可以使用的最小文件数,如果使用更大的值,文件描述符在cache中总是打开状态.
+    #语法:open_file_cache_min_uses number 默认值:open_file_cache_min_uses 1 使用字段:服务器.http, server, location  这个指令指定了在open_file_cache指令无效的参数中一定的时间范围内可以使用的最小文件数,如果使用更大的值,文件描述符在cache中总是打开状态.
     open_file_cache_min_uses 1;
     
-    #语法:open_file_cache_errors on | off 默认值:open_file_cache_errors off 使用字段:http, server, location 这个指令指定是否在搜索一个文件时记录cache错误.
+    #语法:open_file_cache_errors on | off 默认值:open_file_cache_errors off 使用字段:服务器.http, server, location 这个指令指定是否在搜索一个文件时记录cache错误.
     open_file_cache_errors on;
 }
  
  
  
 #设定http服务器，利用它的反向代理功能提供负载均衡支持
-http
+服务器.http
 {
     #文件扩展名与文件类型映射表
     include mime.types;
@@ -182,7 +182,7 @@ http
         #    server 127.0.0.1:6060;
         #    server 127.0.0.1:7070 backup;
         #}
-        #在需要使用负载均衡的server中增加 proxy_pass http://bakend/;
+        #在需要使用负载均衡的server中增加 proxy_pass 服务器.http://bakend/;
 
         #每个设备的状态设置为:
         #1.down表示单前的server暂时不参与负载
@@ -250,7 +250,7 @@ http
          
         #对 "/" 启用反向代理
         location / {
-            proxy_pass http://127.0.0.1:88;
+            proxy_pass 服务器.http://127.0.0.1:88;
             proxy_redirect off;
             proxy_set_header X-Real-IP $remote_addr;
              
@@ -315,7 +315,7 @@ http
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_pass http://127.0.0.1:8080;
+            proxy_pass 服务器.http://127.0.0.1:8080;
         }
          
         #所有静态文件由nginx直接读取不经过tomcat或resin
