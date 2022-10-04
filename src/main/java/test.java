@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.curator.shaded.com.google.common.base.Charsets;
+import spring.lifeCycle.Person;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -16,8 +17,11 @@ import static javax.xml.bind.DatatypeConverter.printLong;
 public class test {
 
     public static void main(String[] args)  {
-        boolean equals = new Integer(1933).equals(new Integer(12933));
-        System.out.println(equals);
+        Person person = new Person();
+        person.setName("ytf");
+
+        System.out.println( JSON.toJSONString(person) );
+
 
 
     }
