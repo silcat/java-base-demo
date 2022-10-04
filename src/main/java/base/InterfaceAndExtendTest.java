@@ -3,6 +3,8 @@ package base;
 
 import redis.clients.jedis.Jedis;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 接口，继承 与 多态
  */
@@ -11,7 +13,7 @@ public class InterfaceAndExtendTest {
 
         Car aCar = new ACar();
         Car bCar = new BCar();
-        Car cCar = new CCar();
+
         CarType cCarType = new CCar();
 
         if ( cCarType instanceof  CCar){
@@ -25,7 +27,7 @@ public class InterfaceAndExtendTest {
         }
         System.out.println("bCar："+ bCar.funtion());
         //多态问题：无法获取子类的属性
-
+        new  ThreadLocal<>().remove();
     }
     interface CarType{
        void  lable(String lable);

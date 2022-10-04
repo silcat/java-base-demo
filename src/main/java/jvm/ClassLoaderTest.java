@@ -10,7 +10,16 @@ import sun.security.ec.CurveDB;
 public class ClassLoaderTest {
 
     public static void main(String[] args) throws Exception {
-        classLoader();
+//        test test = new test();
+//        System.out.println(    jvm.test.getA());
+//        System.out.println(    test.getB());
+//        jvm.test.setA("a1");
+//        test.setB("b1");
+//        test test2 = new test();
+//        System.out.println(    test2.getA());
+//        System.out.println(    test2.getB());
+
+        System.out.println( jvm.test.a);
     }
     public static void classLoader(){
         System.out.println("-------------启动类加载器------------");
@@ -60,5 +69,13 @@ public class ClassLoaderTest {
 
 
     }
+    public static void classload () {
+        try {
+            Class.forName("jvm.test");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
